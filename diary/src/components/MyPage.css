@@ -1,0 +1,15 @@
+.mypage-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.mypage-container h2 {
+    margin-bottom: 20px;
+}
+
+.mypage-container p {
+    margin: 10px 0;
+    font-size: 18px;
+}

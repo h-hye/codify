@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Home from './components/Home';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import Diary from './components/Diary';
-import MyPage from './components/MyPage';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Diary from './pages/Diary';
+import MyPage from './pages/MyPage';
 // import Statics from './components/Statics'; // 나중에 추가
 // import Shop from './components/Shop';       // 나중에 추가
 // import Create from './components/Create';   // 나중에 추가

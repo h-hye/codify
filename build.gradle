@@ -15,8 +15,14 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+    dependencies {
+
+        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springframework.security:spring-security-crypto'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     compileOnly 'org.projectlombok:lombok'
@@ -31,9 +37,9 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-}
+    }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Member Controller Test</title>
+    <style>
+        form {
+            margin-bottom: 20px;
+        }
+        label, input {
+            display: block;
+            margin-bottom: 10px;
+        }
+        button {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Member Controller Test</h1>
+
+<h2>Join Member</h2>
+<form id="join-form" onsubmit="joinMember(event)">
+    <label for="join-name">Name:</label>
+    <input type="text" id="join-name" name="name" required>
+    <label for="join-email">Email:</label>
+    <input type="email" id="join-email" name="email" required>
+    <label for="join-password">Password:</label>
+    <input type="password" id="join-password" name="password" required>
+    <button type="submit">Join</button>
+</form>
+
+<h2>Login Member</h2>
+<form id="login-form" onsubmit="loginMember(event)">
+    <label for="login-name">Name:</label>
+    <input type="text" id="login-name" name="name" required>
+    <label for="login-password">Password:</label>
+    <input type="password" id="login-password" name="password" required>
+    <button type="submit">Login</button>
+</form>
+
+<h2>Change Password</h2>
+<form id="change-password-form" onsubmit="changePassword(event)">
+    <label for="change-id">User ID:</label>
+    <input type="number" id="change-id" name="id" required>
+    <label for="change-old-password">Old Password:</label>
+    <input type="password" id="change-old-password" name="oldPassword" required>
+    <label for="change-new-password">New Password:</label>
+    <input type="password" id="change-new-password" name="newPassword" required>
+    <button type="submit">Change Password</button>
+</form>
+
+<h2>Find Password</h2>
+<form id="find-password-form" onsubmit="findPassword(event)">
+    <label for="find-password-name">Name:</label>
+    <input type="text" id="find-password-name" name="name" required>
+    <label for="find-password-email">Email:</label>
+    <input type="email" id="find-password-email" name="email" required>
+    <button type="submit">Find Password</button>
+</form>
+
+<h2>Find Name</h2>
+<form id="find-name-form" onsubmit="findName(event)">
+    <label for="find-name-email">Email:</label>
+    <input type="email" id="find-name-email" name="email" required>
+    <button type="submit">Find Name</button>
+</form>
+
+<script>
+    function joinMember(event) {
+        event.preventDefault();
+        const name = document.getElementById('join-name').value;
+        const email = document.getElementById('join-email').value;
+        const password = document.getElementById('join-password').value;
+
+        fetch('/members/join', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name, email, password})
+        })
+            .then(response => response.text())
+            .then(data => alert(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function loginMember(event) {
+        event.preventDefault();
+        const name = document.getElementById('login-name').value;
+        const password = document.getElementById('login-password').value;
+
+        fetch('/members/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name, password})
+        })
+            .then(response => response.text())
+            .then(data => alert(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    <meta name="_csrf" content="${2b5503a4-85d4-47d5-b122-5ced02643238}"/>
+    <meta name="_csrf_header" content="${XSRF-TOKEN}"/>
+
+    function changePassword(event) {
+        event.preventDefault();
+        const id = document.getElementById('change-id').value;
+        const oldPassword = document.getElementById('change-old-password').value;
+        const newPassword = document.getElementById('change-new-password').value;
+
+        fetch(`/members/${id}/change-password`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({oldPassword, newPassword})
+        })
+            .then(response => response.text())
+            .then(data => alert(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function findPassword(event) {
+        event.preventDefault();
+        const name = document.getElementById('find-password-name').value;
+        const email = document.getElementById('find-password-email').value;
+
+        fetch(`/members/find-password?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`)
+            .then(response => response.text())
+            .then(data => alert('Password: ' + data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function findName(event) {
+        event.preventDefault();
+        const email = document.getElementById('find-name-email').value;
+
+        fetch(`/members/find-name?email=${encodeURIComponent(email)}`)
+            .then(response => response.text())
+            .then(data => alert('Name: ' + data))
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Diary.css';
+import '../styles/Diary.css';
 
 const Diary = () => {
     const [date, setDate] = useState('');

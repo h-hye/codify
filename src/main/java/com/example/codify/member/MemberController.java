@@ -1,10 +1,7 @@
 package com.example.codify.member;
 
 import com.example.codify.jwt.JwtService;
-import com.example.codify.member.dto.ChangeNameRequest;
-import com.example.codify.member.dto.JoinMemberRequest;
-import com.example.codify.member.dto.LoginMemberRequest;
-import com.example.codify.member.dto.ChangePasswordRequest;
+import com.example.codify.member.dto.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
@@ -46,25 +43,33 @@ public class MemberController {
     @GetMapping("/find-password")
     public ResponseEntity<String> findPassword(@RequestParam String name,
                                                @RequestParam String email) {
-        String password = memberService.findPassword(name, email);
+        String password = memberService.findpassword(name, email);
         return ResponseEntity.ok().body(password);
     }
 
+
     @GetMapping("/find-name")
     public ResponseEntity<String> findName(@RequestParam String email) {
-        String name = memberService.findName(email);
-        return ResponseEntity.ok().body(name);
+        String name = memberService.findname(email);
+        String responseMessage = "당신의 이름은 \"" + name + "\" 입니다.";
+        return ResponseEntity.ok().body(responseMessage);
     }
 
     @PatchMapping("/change-password/{id}")
-    public ResponseEntity<String> changepassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) throws IllegalAccessException {
+    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) throws IllegalAccessException {
         memberService.changepassword(id, request);
-        return ResponseEntity.ok().body("password changed");
+        return ResponseEntity.ok().body("비밀번호가 변경되었습니다.");
     }
 
     @PatchMapping("/change-name/{id}")
-    public ResponseEntity<String> changename(@PathVariable Long id, @RequestBody ChangeNameRequest request) throws IllegalAccessException {
+    public ResponseEntity<String> changeName(@PathVariable Long id, @RequestBody ChangeNameRequest request) throws IllegalAccessException {
         memberService.changename(id, request);
-        return ResponseEntity.ok().body("name changed");
+        return ResponseEntity.ok().body("이름이 변경되었습니다.");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        memberService.deleteMember(id);
+        return ResponseEntity.ok().body("탈퇴 완료");
     }
 }

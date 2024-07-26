@@ -16,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Objects;
 import java.util.Optional;
 
-
 @Slf4j
 @Service
 @Component
@@ -59,13 +58,39 @@ public class MemberService {
         return member;
     }
 
+    public String findpassword(String name, String email) {
+        Member member = memberRepository.findByNameAndEmail(name, email)
+                .orElseThrow(() -> {
+                    log.error("회원 정보가 없습니다.");
+                    return new EntityNotFoundException("회원 정보가 없습니다.");
+                });
+
+        return member.getPassword();
+    }
+
+
+    public String findname(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    log.error("회원 정보가 없습니다.");
+                    return new EntityNotFoundException("Member not found");
+                });
+
+        return member.getName();
+    }
+
     public void changename(Long id, ChangeNameRequest request) throws IllegalAccessException {
         Member member = memberRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
 
+        String updatename = request.newName();
+
         if(!Objects.equals(request.oldName(), member.getName())) {
             throw new IllegalAccessException("기존 이름과 일치하지 않습니다.");
         }
+
+        member.setName(updatename);
+        memberRepository.save(member);
     }
 
     public void changepassword(Long id, ChangePasswordRequest request) throws IllegalAccessException {
@@ -99,27 +124,12 @@ public class MemberService {
     }
 
 
-        public String findPassword(String name, String email) {
-            Member member = memberRepository.findByNameAndEmail(name, email)
-                    .orElseThrow(() -> {
-                        log.error("회원 정보가 없습니다.");
-                        return new EntityNotFoundException("Member not found");
-                    });
-
-            return member.getPassword();
-        }
-
-
-        public String findName(String email) {
-            Member member = memberRepository.findByEmail(email)
-                    .orElseThrow(() -> {
-                        log.error("회원 정보가 없습니다.");
-                        return new EntityNotFoundException("Member not found");
-                    });
-
-            return member.getName();
-        }
-    }
+        public void deleteMember(Long id) {
+                    Member member = memberRepository.findById(id)
+                            .orElseThrow(EntityNotFoundException::new);
+                    member.setDeleted(true);
+                }
+            }
 
 
 

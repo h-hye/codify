@@ -27,7 +27,10 @@ public class SecurityConfig {
                 // 요청에 대한 권한을 설정합니다.
                 .authorizeHttpRequests(authorize -> authorize
                         // join 및 login 경로에 대해 인증 없이 접근할 수 있도록 허용합니다.
-                        .requestMatchers("/members/find-name", "/members/find-password", "/members/change-password/{id}").permitAll()
+                        .requestMatchers("/api/members/find-name",
+                                        "/api/members/find-password",
+                                        "/api/members/change-password/{id}",
+                                        "/api/members/change-name/{id}").permitAll()
                         .anyRequest().permitAll()
                 );
 

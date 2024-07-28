@@ -18,14 +18,15 @@ public class PostMapper {
         return postDTO; //PostDTO 객체 반환
     }
 
-    public Post toEntity(PostDTO postDTO, Member member) { //PostDTO를 Post 엔티티로 변환하기 위함
-        Post post = new Post(); // 새 Post의 엔티티 객체 생성
+    public Post toEntity(PostDTO postDTO, Member member) {
+        Post post = new Post();
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
-        post.setMember(member); //전달받은 Member 객체를 Post 엔티티의 member 필드에 설정
-        post.setAiResponse(postDTO.getAiResponse()); //PostDTO의 title, content, aiResponse 값을 Post 엔티티에 설정
-        return post; // 변환된 Post 엔티티 객체 반환
+        post.setMember(member);
+        post.setAiResponse(postDTO.getAiResponse());
+        post.setPostId(postDTO.getPostId()); // 클라이언트가 제공한 postId를 사용
+        return post;
     }
+
+
 }
-
-

@@ -29,7 +29,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
-        PostDTO createdPost = postService.createPost(postDTO); // PostService 호출해서 새 게시물 생성
+        PostDTO createdPost = postService.createPost(postDTO);
         return ResponseEntity.ok(createdPost);
     }
 

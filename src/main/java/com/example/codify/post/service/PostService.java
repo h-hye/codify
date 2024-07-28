@@ -36,16 +36,22 @@ public class PostService {
                 .map(postMapper::toDto); //Post를 PostDTO로 변환하여 반환. 게시물 미존재 시 빈 Optional 반환
     }
 
-    public PostDTO createPost(PostDTO postDTO) { //새 게시물 생성, 생성된 게시물의 DTO 반환
+    public PostDTO createPost(PostDTO postDTO) {
         Member member = null;
-        if (postDTO.getMemberId() != null) { //PostDTO에 memberID 포함 시 해당 회원 조회
-            member = memberRepository.findById(postDTO.getMemberId()) //Member 엔티티 조회
-                    .orElseThrow(() -> new RuntimeException("Member not found")); //회원 미존재 시 예외 발생
+        if (postDTO.getMemberId() != null) {
+            member = memberRepository.findById(postDTO.getMemberId())
+                    .orElseThrow(() -> new RuntimeException("Member not found"));
         }
-        Post post = postMapper.toEntity(postDTO, member); //PostDTO를 Post 엔티티로 변환
-        Post savedPost = postRepository.save(post); //게시물 데이터 저장
-        return postMapper.toDto(savedPost); //저장된 Post 엔티티를 PostDTO로 변환
+
+        // 클라이언트가 제공한 postId를 사용하여 Post 엔티티 생성
+        Post post = postMapper.toEntity(postDTO, member);
+        post.setPostId(postDTO.getPostId()); // 클라이언트가 제공한 postId를 사용
+
+        // 데이터베이스에 저장
+        Post savedPost = postRepository.save(post);
+        return postMapper.toDto(savedPost);
     }
+
 
     public PostDTO updatePost(Long postId, PostDTO postDTO) { //특정 ID의 게시물 수정, 수정된 게시물의 DTO 반환
         Post post = postRepository.findById(postId) //ID로 게시물 조회

@@ -26,9 +26,7 @@ public class Post extends BaseEntity {
     private String aiResponse;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // postID 자동생성
-    @Column(name = "post_id") //post_id라는 이름으로 db table과 매ㅣㅇ
+    @Column(name = "post_id") //post_id라는 이름으로 db table과 매핑
     private Long postId; // 게시물 고유 식별자
 
 }
-

@@ -29,74 +29,64 @@ public class PostService {
     @Autowired
     private OpenAiService openAiService;
 
-    public List<PostDTO> getPostsByMonth(String postIdPrefix) {
-        // Repository를 통해 특정 접두사로 시작하는 게시물 리스트 조회
+    public List<PostDTO> getPostsByMonth(String postIdPrefix, Long memberId) {
         List<Post> posts = postRepository.findByPostIdStartingWith(postIdPrefix);
-        // Post 엔티티를 PostDTO로 변환
         return posts.stream()
+                .filter(post -> post.getMember() != null && post.getMember().getMemberid().equals(memberId))
                 .map(postMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public Optional<PostDTO> getPostById(String postId) { //ID로 게시물 조회, PostDTO 반환
-        return postRepository.findById(postId) //특정 ID로 Post 엔티티 조회
-                .map(postMapper::toDto); //Post를 PostDTO로 변환하여 반환. 게시물 미존재 시 빈 Optional 반환
+    public Optional<PostDTO> getPostById(String postId, Long memberId) {
+        return postRepository.findById(postId)
+                .filter(post -> post.getMember() != null && post.getMember().getMemberid().equals(memberId))
+                .map(postMapper::toDto);
     }
 
-    public PostDTO createPost(PostDTO postDTO) {
-        // 클라이언트에서 제공한 postId를 가져옵니다.
+    public PostDTO createPost(PostDTO postDTO, Long memberId) {
         String postId = postDTO.getPostId();
 
-        // 주어진 postId가 이미 존재하는지 확인합니다.
         if (postRepository.existsById(postId)) {
             throw new RuntimeException("Post ID already exists");
         }
 
-        // Member 정보 설정 (선택적)
-        Member member = null;
-        if (postDTO.getMemberId() != null) {
-            member = memberRepository.findById(postDTO.getMemberId())
-                    .orElseThrow(() -> new RuntimeException("Member not found"));
-        }
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new RuntimeException("Member not found"));
 
-        // PostDTO를 Post 엔티티로 변환
         Post post = postMapper.toEntity(postDTO, member);
 
-        // AI 응답 생성
         String aiResponse = openAiService.getAiResponse(postDTO.getContent());
         post.setAiResponse(aiResponse);
 
-        // Post 엔티티를 저장
         Post savedPost = postRepository.save(post);
 
-        // 저장된 Post 엔티티를 DTO로 변환하여 반환
         return postMapper.toDto(savedPost);
     }
 
-
-
-    public PostDTO updatePost(String postId, PostDTO postDTO) { //특정 ID의 게시물 수정, 수정된 게시물의 DTO 반환
-        Post post = postRepository.findById(postId) //ID로 게시물 조회
-                .orElseThrow(() -> new RuntimeException("Post not found")); //게시물 미존재 시 예외 발생
+    public PostDTO updatePost(String postId, PostDTO postDTO, Long memberId) {
+        Post post = postRepository.findById(postId)
+                .filter(p -> p.getMember() != null && p.getMember().getMemberid().equals(memberId))
+                .orElseThrow(() -> new RuntimeException("Post not found or not owned by user"));
 
         post.setTitle(postDTO.getTitle());
         post.setContent(postDTO.getContent());
 
-        if (postDTO.getMemberId() != null) { //memberID 포함 시 회원 조회하여 게시물에 설정
+        if (postDTO.getMemberId() != null) {
             Member member = memberRepository.findById(postDTO.getMemberId())
                     .orElseThrow(() -> new RuntimeException("Member not found"));
             post.setMember(member);
         }
 
         post.setAiResponse(postDTO.getAiResponse());
-        Post updatedPost = postRepository.save(post); //수정된 게시물 데이터 저장
-        return postMapper.toDto(updatedPost); //저장된 Post 엔티티 PostDT로 변환하여 반환
+        Post updatedPost = postRepository.save(post);
+        return postMapper.toDto(updatedPost);
     }
 
-    public void deletePost(String postId) { //특정 ID의 게시물 삭제
-        if (!postRepository.existsById(postId)) { //게시물 존재 여부 확인
-            throw new RuntimeException("Post not found"); //미존재 시 예외 발생
-        }
-        postRepository.deleteById(postId); //게시물 삭제
+    public void deletePost(String postId, Long memberId) {
+        Post post = postRepository.findById(postId)
+                .filter(p -> p.getMember() != null && p.getMember().getMemberid().equals(memberId))
+                .orElseThrow(() -> new RuntimeException("Post not found or not owned by user"));
+
+        postRepository.deleteById(postId);
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class OpenAiService {
 
+    private final String apiKey = "secret";
     private final RestTemplate restTemplate = new RestTemplate();
     private final String apiUrl = "https://api.openai.com/v1/chat/completions";
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -24,7 +25,7 @@ public class OpenAiService {
         headers.set("Authorization", "Bearer " + apiKey);
         headers.set("Content-Type", "application/json");
 
-        String requestJson = "{ \"model\": \"gpt-3.5-turbo\", \"messages\": [{\"role\": \"user\", \"content\": \"" + content + "\"}], \"max_tokens\": 1 }";
+        String requestJson = "{ \"model\": \"gpt-3.5-turbo\", \"messages\": [{\"role\": \"user\", \"content\": \"" + content + "\"}], \"max_tokens\": 100 }";
         HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);

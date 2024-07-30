@@ -26,7 +26,7 @@ public class Post extends BaseEntity {
     private String aiResponse;
 
     @Id
-    @Column(name = "post_id") //post_id라는 이름으로 db table과 매핑
-    private Long postId; // 게시물 고유 식별자
+    @Column(name = "post_id")
+    private String postId; // Long -> String으로 변경
 
 }

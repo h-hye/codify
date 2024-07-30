@@ -19,7 +19,7 @@ public class MemberController {
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody JoinMemberRequest request) throws IllegalAccessException {
         memberService.joinMember(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body("created");
+        return ResponseEntity.status(HttpStatus.CREATED).body("회원가입이 되었습니다.");
     }
 
     @PostMapping("/login")
@@ -31,22 +31,11 @@ public class MemberController {
             String token = jwtService.create(member.getEmail());
             return ResponseEntity.ok()
                     .header("Authorization", token)
-                    .body("logined");
+                    .body("로그인 성공");
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("unauthorized");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.ok().body("회원 정보가 없습니다.");
         }
     }
-
-
-    @GetMapping("/find-password")
-    public ResponseEntity<String> findPassword(@RequestParam String name,
-                                               @RequestParam String email) {
-        String password = memberService.findpassword(name, email);
-        return ResponseEntity.ok().body(password);
-    }
-
 
     @GetMapping("/find-name")
     public ResponseEntity<String> findName(@RequestParam String email) {
@@ -56,8 +45,8 @@ public class MemberController {
     }
 
     @PatchMapping("/change-password/{id}")
-    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) throws IllegalAccessException {
-        memberService.changepassword(id, request);
+    public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) throws IllegalAccessException {
+        memberService.changepassword(request);
         return ResponseEntity.ok().body("비밀번호가 변경되었습니다.");
     }
 
@@ -70,6 +59,6 @@ public class MemberController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id) {
         memberService.deleteMember(id);
-        return ResponseEntity.ok().body("탈퇴 완료");
+        return ResponseEntity.ok().body("탈퇴 완료 되었습니다.");
     }
 }

@@ -23,7 +23,7 @@ public class MemberCustomException extends CustomException {
     }
 
     public static class IncorrectPasswordException extends MemberCustomException {
-        public IncorrectPasswordException() { super(MemberErrorCode.INVALID_IN_PASSWORD);
+        public IncorrectPasswordException() { super(MemberErrorCode. INVALID_IN_PASSWORD);
         }
     }
 }

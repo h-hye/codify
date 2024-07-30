@@ -3,6 +3,7 @@ package com.example.codify.member;
 import com.example.codify.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
@@ -25,7 +26,6 @@ public class Member extends BaseEntity {
 
     @Column(length = 1024, nullable = false)
     private String password;
-
 
 }
 

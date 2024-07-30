@@ -27,12 +27,11 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void joinMember(JoinMemberRequest request) throws IllegalAccessException {
+    public void joinMember(JoinMemberRequest request) {
         String joinName = request.name();
         String joinEmail = request.email();
         String joinPassword = request.password();
 
-        checkDuplicateName(joinName);
         checkDuplicateEmail(joinEmail);
 
         String encodedPassword = passwordEncoder.encode(joinPassword);
@@ -58,22 +57,11 @@ public class MemberService {
         return member;
     }
 
-    public String findpassword(String name, String email) {
-        Member member = memberRepository.findByNameAndEmail(name, email)
-                .orElseThrow(() -> {
-                    log.error("회원 정보가 없습니다.");
-                    return new EntityNotFoundException("회원 정보가 없습니다.");
-                });
-
-        return member.getPassword();
-    }
-
-
     public String findname(String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> {
                     log.error("회원 정보가 없습니다.");
-                    return new EntityNotFoundException("Member not found");
+                    return new EntityNotFoundException("회원 정보가 없습니다.");
                 });
 
         return member.getName();
@@ -93,25 +81,21 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void changepassword(Long id, ChangePasswordRequest request) throws IllegalAccessException {
-        Member member = memberRepository.findById(id)
+    public void changepassword(ChangePasswordRequest request) throws IllegalAccessException {
+        // 요청에서 이메일, 이름, 기존 비밀번호, 새 비밀번호를 추출
+        String email = request.email();
+        String name = request.name();
+        String oldPassword = request.oldPassword();
+        String newPassword = request.newPassword();
+
+        Member member = memberRepository.findByNameAndEmail(name, email)
                 .orElseThrow(MemberNotFoundException::new);
 
-        if(!passwordEncoder.matches(request.getOldPassword(), member.getPassword())) {
+        if(!passwordEncoder.matches(oldPassword, member.getPassword())) {
             throw new IllegalAccessException("기존 비밀번호와 일치하지 않습니다.");
         }
-        member.setPassword(passwordEncoder.encode(request.newPassword()));
+        member.setPassword(passwordEncoder.encode(newPassword));
         memberRepository.save(member);
-    }
-
-    private void checkDuplicateName(String name) throws IllegalAccessException {
-
-        Optional<Member> optionalMember= memberRepository.findByName(name);
-
-        if(optionalMember.isPresent()) {
-            log.error("중복된 이름입니다.");
-            throw new IllegalAccessException("중복된 이름입니다.");
-        }
     }
 
     private void checkDuplicateEmail(String email) throws DuplicatedEmailException {
@@ -123,11 +107,11 @@ public class MemberService {
         }
     }
 
-
         public void deleteMember(Long id) {
                     Member member = memberRepository.findById(id)
                             .orElseThrow(EntityNotFoundException::new);
                     member.setDeleted(true);
+                    memberRepository.delete(member);
                 }
             }
 

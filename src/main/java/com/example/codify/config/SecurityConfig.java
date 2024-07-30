@@ -2,13 +2,11 @@ package com.example.codify.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,18 +20,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
-                // 요청에 대한 권한을 설정합니다.
+                .csrf(AbstractHttpConfigurer::disable) // CSRF 보호 비활성화
+                .cors(AbstractHttpConfigurer::disable) // CORS 보호 비활성화
                 .authorizeHttpRequests(authorize -> authorize
-                        // join 및 login 경로에 대해 인증 없이 접근할 수 있도록 허용합니다.
-                        .requestMatchers("/api/members/find-name",
-                                        "/api/members/find-password",
-                                        "/api/members/change-password/{id}",
-                                        "/api/members/change-name/{id}").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().permitAll() // 모든 요청에 대해 인증 없이 접근 허용
                 );
 
         return http.build();
     }
+
 }

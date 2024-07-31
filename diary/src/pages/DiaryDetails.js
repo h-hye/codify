@@ -1,0 +1,67 @@
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../styles/DiaryDetails.css';
+
+const DiaryDetails = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [diary, setDiary] = useState(null);
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+
+    useEffect(() => {
+        const fetchDiary = async () => {
+            try {
+                const response = await axios.get(`/api/posts/${id}`);
+                setDiary(response.data);
+                setTitle(response.data.title);
+                setContent(response.data.content);
+            } catch (error) {
+                console.error('Error fetching diary:', error);
+            }
+        };
+        fetchDiary();
+    }, [id]);
+
+    const handleUpdate = async () => {
+        try {
+            await axios.put(`/api/posts/${id}`, {
+                title,
+                content,
+            });
+            alert('일기가 수정되었습니다.');
+        } catch (error) {
+            console.error('Error updating diary:', error);
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            await axios.delete(`/api/posts/${id}`);
+            alert('일기가 삭제되었습니다.');
+            navigate('/diary-list'); // 일기 목록 페이지로 이동
+        } catch (error) {
+            console.error('Error deleting diary:', error);
+        }
+    };
+
+    if (!diary) {
+        return <p>Loading...</p>;
+    }
+
+    return (
+        <div className='diary-details-container'>
+            <button className='back-button' onClick={() => navigate('/diary-list')}>
+                뒤로가기
+            </button>
+            <h2>일기 상세</h2>
+            <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} />
+            <textarea value={content} onChange={(e) => setContent(e.target.value)}></textarea>
+            <button onClick={handleUpdate}>수정</button>
+            <button onClick={handleDelete}>삭제</button>
+        </div>
+    );
+};
+
+export default DiaryDetails;

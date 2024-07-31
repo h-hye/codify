@@ -1,42 +1,114 @@
 .diary-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  font-family: 'Pretendard', sans-serif;
   padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.diary-container h2 {
-  margin-bottom: 20px;
+h2 {
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 24px;
 }
 
-.diary-container form {
+.diary-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-}
-
-.diary-container textarea {
-  width: 100%;
-  height: 150px;
-  margin-bottom: 20px;
-}
-
-.diary-container .button-group {
-  display: flex;
   gap: 10px;
-  margin-top: 20px;
 }
 
-.diary-container .button-group button {
-  padding: 10px 20px;
+.title-input,
+.image-input,
+.submit-button {
+  padding: 10px;
   font-size: 16px;
-  cursor: pointer;
-  border: none;
-  background-color: #007bff;
-  color: white;
+  border: 1px solid #ced4da;
   border-radius: 5px;
 }
 
-.diary-container .button-group button:hover {
+.diary-content-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.image-preview,
+.content-textarea {
+  width: 50%;
+}
+
+.image-preview img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.content-textarea {
+  height: 300px;
+  width: 100%;
+  resize: none;
+}
+
+.submit-button {
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.ai-response {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #E0F7FA;
+  border-radius: 5px;
+  color: #00796B;
+  min-height: 100px;
+}
+
+.button-group {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.button-group button:hover {
+  background-color: #0056b3;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.back-button:hover {
   background-color: #0056b3;
 }

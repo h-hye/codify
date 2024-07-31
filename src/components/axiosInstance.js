@@ -1,36 +1,71 @@
 // axiosInstance.js
 import axios from 'axios';
 
+let isRefreshing = false;
+let refreshSubscribers = [];
+
 const instance = axios.create({
-    baseURL: 'http://localhost:8080', // URL 추가해야합니당
+    baseURL: 'http://localhost:8080',
 });
+
+const subscribeTokenRefresh = (cb) => {
+    refreshSubscribers.push(cb);
+};
+
+const onRrefreshed = (token) => {
+    refreshSubscribers.map((cb) => cb(token));
+};
 
 instance.interceptors.request.use(
     (config) => {
-        // 요청이 시작되기 전에 로딩 상태를 설정
-        console.log('Loading started');
-        // 모든 요청에 대한 API 키 추가를 하나의 코드로 설정
-        config.params = {
-            ...config.params,
-        };
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
         return config;
     },
     (error) => {
-        // 요청 에러 처리
-        console.error('Request error:', error);
-
         return Promise.reject(error);
     }
 );
 
 instance.interceptors.response.use(
     (response) => {
-        // 응답 데이터 반환 처리 (반환 처리 전 데이터를 추가/변경/삭제 가능)
         return response;
     },
-    (error) => {
-        // 응답 에러 처리
-        console.error('Response error:', error);
+    async (error) => {
+        const { config, response } = error;
+        const originalRequest = config;
+
+        if (response.status === 401) {
+            if (!isRefreshing) {
+                isRefreshing = true;
+                try {
+                    const refreshToken = localStorage.getItem('refreshToken');
+                    const { data } = await axios.post('http://localhost:8080/api/refresh', { refreshToken });
+
+                    localStorage.setItem('token', data.accessToken);
+                    localStorage.setItem('refreshToken', data.refreshToken);
+
+                    isRefreshing = false;
+                    onRrefreshed(data.accessToken);
+                    refreshSubscribers = [];
+                } catch (err) {
+                    console.error('Refresh token expired or invalid');
+                    return Promise.reject(error);
+                }
+            }
+
+            const retryOriginalRequest = new Promise((resolve) => {
+                subscribeTokenRefresh((token) => {
+                    originalRequest.headers['Authorization'] = `Bearer ${token}`;
+                    resolve(instance(originalRequest));
+                });
+            });
+
+            return retryOriginalRequest;
+        }
+
         return Promise.reject(error);
     }
 );

@@ -1,9 +1,12 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
 import '../styles/Login.css';
 
 const Login = () => {
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleGoogleLogin = useCallback(
         (response) => {
@@ -53,20 +56,37 @@ const Login = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // 로그인 로직을 여기에서 처리
-        // 예를 들어, 사용자가 입력한 이메일과 비밀번호를 서버로 전송하여 인증
-        // 로그인 성공 시 홈 화면으로 이동
-        navigate('/'); // 홈 화면으로 이동
+        try {
+            // 서버에 로그인 요청을 보내고, 토큰 발급
+            const response = await axios.post('http://localhost:8080/api/login', {
+                email: email,
+                password: password,
+            });
+
+            // 서버에서 받은 토큰을 저장합니다.
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+
+            navigate('/diary'); // 로그인 성공 시 홈 화면으로 이동
+        } catch (error) {
+            console.error(error);
+            // 에러 처리 로직 추가 가능
+        }
     };
 
     return (
         <div className='login-container'>
             <h2>감정일기</h2>
             <form onSubmit={handleSubmit}>
-                <input type='text' placeholder='이메일' />
-                <input type='password' placeholder='비밀번호' />
+                <input type='text' placeholder='이메일' value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input
+                    type='password'
+                    placeholder='비밀번호'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
                 <button type='submit' className='login'>
                     로그인
                 </button>

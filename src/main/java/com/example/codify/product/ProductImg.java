@@ -15,7 +15,7 @@ public class ProductImg {
     @Id
     @Column(name="product_img_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
 
     private String imgName;  // 이미지 파일명
 

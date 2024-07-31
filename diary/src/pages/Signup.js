@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../components/axiosInstance';
 import '../styles/Signup.css';
 
 const Signup = () => {
     const [email, setEmail] = useState('');
+    const [nickname, setNickname] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [emailValid, setEmailValid] = useState(null);
     const [emailError, setEmailError] = useState(''); // 이메일 오류 메시지 상태
+    const [nicknameError, setNicknameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confirmPasswordValid, setConfirmPasswordValid] = useState(null);
     const [confirmPasswordError, setConfirmPasswordError] = useState(''); // 비밀번호 확인 오류 메시지 상태
+    const [alertMessage, setAlertMessage] = useState(''); // 커스텀 알림 메시지 상태
     const navigate = useNavigate();
 
     const validateEmail = (email) => {
@@ -27,11 +31,20 @@ const Signup = () => {
     const handleEmailBlur = () => {
         if (!validateEmail(email)) {
             setEmailValid(false);
-            setEmailError('유효한 이메일 주소를 입력해주세요.');
+            if (email === '') {
+                setEmailError('이메일을 입력해주세요.');
+            } else {
+                setEmailError('유효한 이메일 주소를 입력해주세요. 예: example@domain.com');
+            }
         } else {
             setEmailValid(true);
             setEmailError('');
         }
+    };
+
+    const handleNicknameChange = (e) => {
+        setNickname(e.target.value);
+        setNicknameError(''); // 닉네임 오류 메시지 초기화
     };
 
     const handlePasswordChange = (e) => {
@@ -55,13 +68,18 @@ const Signup = () => {
         }
     }, [password, confirmPassword]);
 
-    const handleSignup = (e) => {
+    const handleSignup = async (e) => {
         e.preventDefault();
         let isValid = true;
 
         if (!emailValid) {
             setEmailValid(false);
             setEmailError('유효한 이메일 주소를 입력해주세요.');
+            isValid = false;
+        }
+
+        if (nickname.trim() === '') {
+            setNicknameError('닉네임을 입력해주세요.');
             isValid = false;
         }
 
@@ -77,8 +95,34 @@ const Signup = () => {
         }
 
         if (isValid) {
-            alert('회원가입에 성공했습니다. 로그인 페이지로 이동합니다.');
-            navigate('/login');
+            try {
+                await axiosInstance.post('/api/members/join', {
+                    nickname: nickname,
+                    email: email,
+                    password: password,
+                });
+                setAlertMessage('회원가입에 성공했습니다. 잠시 후 로그인 창으로 이동합니다.');
+                setTimeout(() => navigate('/login'), 2000); // 2초 후 로그인 페이지로 이동
+            } catch (error) {
+                console.error(error);
+                // 서버에서 반환한 응답을 이용해 사용자에게 알맞은 오류 메시지를 보여줍니다.
+                if (error.response) {
+                    // 서버 응답이 있는 경우
+                    if (error.response.status === 400) {
+                        setAlertMessage('잘못된 요청입니다. 입력한 내용을 확인해주세요.');
+                    } else if (error.response.status === 409) {
+                        setAlertMessage('이미 등록된 이메일입니다.');
+                    } else {
+                        setAlertMessage('회원가입에 실패했습니다. 다시 시도해주세요.');
+                    }
+                } else if (error.request) {
+                    // 요청이 전송되었지만 응답이 없는 경우
+                    setAlertMessage('서버와의 통신에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                } else {
+                    // 그 외의 오류
+                    setAlertMessage('예기치 못한 오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            }
         }
     };
 
@@ -98,7 +142,18 @@ const Signup = () => {
                         }}
                     />
                     {emailError && <span className='error-message'>{emailError}</span>}
-                    {emailValid === true && <span className='checkmark'>✔</span>}
+                </div>
+                <div className='input-container'>
+                    <input
+                        type='text'
+                        placeholder='닉네임'
+                        value={nickname}
+                        onChange={handleNicknameChange}
+                        style={{
+                            borderColor: nicknameError ? 'red' : '',
+                        }}
+                    />
+                    {nicknameError && <span className='error-message'>{nicknameError}</span>}
                 </div>
                 <div className='input-container'>
                     <input
@@ -123,6 +178,14 @@ const Signup = () => {
                 </div>
                 <button type='submit'>회원가입</button>
             </form>
+            {alertMessage && (
+                <div className='modal-background'>
+                    <div className='custom-alert'>
+                        {alertMessage}
+                        <button onClick={() => setAlertMessage('')}>닫기</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

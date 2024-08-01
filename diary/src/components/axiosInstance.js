@@ -1,11 +1,11 @@
 // axiosInstance.js
 import axios from 'axios';
 
-const instance = axios.create({
+const axiosInstance = axios.create({
     baseURL: 'http://localhost:8080', // URL 추가해야합니당
 });
 
-instance.interceptors.request.use(
+axiosInstance.interceptors.request.use(
     (config) => {
         // 요청이 시작되기 전에 로딩 상태를 설정
         console.log('Loading started');
@@ -23,7 +23,7 @@ instance.interceptors.request.use(
     }
 );
 
-instance.interceptors.response.use(
+axiosInstance.interceptors.response.use(
     (response) => {
         // 응답 데이터 반환 처리 (반환 처리 전 데이터를 추가/변경/삭제 가능)
         return response;

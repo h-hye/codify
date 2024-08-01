@@ -1,3 +1,4 @@
+/* 기존 스타일 유지 */
 .signup-container {
   display: flex;
   flex-direction: column;
@@ -62,6 +63,7 @@
   left: 0;
 }
 
+/* 모달 스타일 */
 .modal-background {
   position: fixed;
   top: 0;
@@ -73,6 +75,8 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
 }
 
 .custom-alert {
@@ -84,9 +88,45 @@
   width: 300px;
   position: relative;
   z-index: 1001;
+  animation: slideIn 0.3s forwards;
 }
+
+/* Signup.css */
+.custom-alert p {
+  margin-bottom: 5px; /* p 태그 간의 간격을 줄임 */
+  font-size: 1em; /* 글자 크기를 키움 */
+  color:#333;
+}
+
 
 .custom-alert button {
   margin-top: 10px;
-  padding: 5px 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.custom-alert button:hover {
+  background-color: #0056b3;
+}
+
+/* 모달 애니메이션 */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

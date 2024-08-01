@@ -101,26 +101,22 @@ const Signup = () => {
                     email: email,
                     password: password,
                 });
-                setAlertMessage('회원가입에 성공했습니다. 잠시 후 로그인 창으로 이동합니다.');
-                setTimeout(() => navigate('/login'), 2000); // 2초 후 로그인 페이지로 이동
+                setAlertMessage(['회원가입에 성공했습니다.', '잠시 후 로그인 창으로 이동합니다.']); // 변경된 부분
+                setTimeout(() => navigate('/login'), 1000); // 2초 후 로그인 페이지로 이동
             } catch (error) {
                 console.error(error);
-                // 서버에서 반환한 응답을 이용해 사용자에게 알맞은 오류 메시지를 보여줍니다.
                 if (error.response) {
-                    // 서버 응답이 있는 경우
                     if (error.response.status === 400) {
-                        setAlertMessage('잘못된 요청입니다. 입력한 내용을 확인해주세요.');
+                        setAlertMessage(['잘못된 요청입니다. 입력한 내용을 확인해주세요.']); // 변경된 부분
                     } else if (error.response.status === 409) {
-                        setAlertMessage('이미 등록된 이메일입니다.');
+                        setAlertMessage(['이미 등록된 이메일입니다.']); // 변경된 부분
                     } else {
-                        setAlertMessage('회원가입에 실패했습니다. 다시 시도해주세요.');
+                        setAlertMessage(['회원가입에 실패했습니다. 다시 시도해주세요.']); // 변경된 부분
                     }
                 } else if (error.request) {
-                    // 요청이 전송되었지만 응답이 없는 경우
-                    setAlertMessage('서버와의 통신에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                    setAlertMessage(['서버와의 통신에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.']); // 변경된 부분
                 } else {
-                    // 그 외의 오류
-                    setAlertMessage('예기치 못한 오류가 발생했습니다. 다시 시도해주세요.');
+                    setAlertMessage(['예기치 못한 오류가 발생했습니다. 다시 시도해주세요.']); // 변경된 부분
                 }
             }
         }
@@ -181,8 +177,15 @@ const Signup = () => {
             {alertMessage && (
                 <div className='modal-background'>
                     <div className='custom-alert'>
-                        {alertMessage}
-                        <button onClick={() => setAlertMessage('')}>닫기</button>
+                        {alertMessage.map(
+                            (
+                                msg,
+                                index // 변경된 부분
+                            ) => (
+                                <p key={index}>{msg}</p>
+                            )
+                        )}
+                        <button onClick={() => setAlertMessage([])}>닫기</button> {/* 변경된 부분 */}
                     </div>
                 </div>
             )}

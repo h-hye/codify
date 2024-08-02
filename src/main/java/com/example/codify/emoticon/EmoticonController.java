@@ -1,11 +1,13 @@
 package com.example.codify.emoticon;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -52,5 +54,10 @@ public class EmoticonController {
   public ResponseEntity<Void> deleteEmoticon(@PathVariable Long id) {
     emoticonService.deleteEmoticon(id);
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/tag/{tag}")
+  public List<EmoticonEntity> getEmoticonsByTag(@PathVariable String tag) {
+    return emoticonService.getEmoticonsByTag(tag);  // 태그로 이모티콘 조회
   }
 }

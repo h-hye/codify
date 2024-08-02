@@ -1,9 +1,11 @@
 package com.example.codify.emoticon;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class EmoticonService {
@@ -22,5 +24,9 @@ public class EmoticonService {
 
   public void deleteEmoticon(Long id) {
     emoticonRepository.deleteById(id);
+  }
+
+  public List<EmoticonEntity> getEmoticonsByTag(String tag) {
+    return emoticonRepository.findByEmoticonTagContaining(tag);  // 태그로 이모티콘 조회
   }
 }

@@ -7,6 +7,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -29,4 +32,15 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true); // 자격 증명을 허용
+        config.addAllowedOriginPattern("*"); // 허용할 출처 설정
+        config.addAllowedHeader("*"); // 허용할 헤더 설정
+        config.addAllowedMethod("*"); // 허용할 HTTP 메서드 설정
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
+    }
 }

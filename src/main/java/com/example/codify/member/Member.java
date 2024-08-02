@@ -1,13 +1,9 @@
 package com.example.codify.member;
 
 import com.example.codify.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,6 +12,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id", nullable = false)
+    private Long memberId;
 
     @Column(length = 16, nullable = false)
     private String name;
@@ -26,6 +27,12 @@ public class Member extends BaseEntity {
 
     @Column(length = 1024, nullable = false)
     private String password;
+
+    public Member(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
 }
 

@@ -1,4 +1,4 @@
 package com.example.codify.member.dto;
 
-public record LoginMemberRequest(String name, String password) {
+public record LoginMemberRequest(String email, String password) {
 }

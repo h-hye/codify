@@ -2,7 +2,7 @@ package com.example.codify.post.mapper;
 
 import com.example.codify.post.dto.PostDTO;
 import com.example.codify.post.entity.Post;
-import com.example.codify.member.entity.Member;
+import com.example.codify.member.Member;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,7 +14,7 @@ public class PostMapper {
         postDTO.setPostId(post.getPostId());
         postDTO.setTitle(post.getTitle());
         postDTO.setContent(post.getContent());
-        postDTO.setMemberId(post.getMember() != null ? post.getMember().getMemberid() : null);
+        postDTO.setMemberId(post.getMember() != null ? post.getMember().getMemberId() :  null);
         postDTO.setAiResponse(post.getAiResponse());
         return postDTO;
     }

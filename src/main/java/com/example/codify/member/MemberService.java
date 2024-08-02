@@ -26,7 +26,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
     public void joinMember(JoinMemberRequest request) {
         String joinName = request.name();
         String joinEmail = request.email();
@@ -40,12 +39,11 @@ public class MemberService {
         memberRepository.save(member);
         }
 
-    @Transactional
     public Member loginMember(LoginMemberRequest request) {
-        String loginName = request.name();
+        String loginEmail = request.email();
         String loginPassword = request.password();
 
-        Member member = memberRepository.findByName(loginName)
+        Member member = memberRepository.findByEmail(loginEmail)
                 .orElseThrow(MemberNotFoundException::new);
 
         if (!passwordEncoder.matches(loginPassword, member.getPassword())) {

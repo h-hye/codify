@@ -2,19 +2,19 @@ package com.example.codify.post.controller;
 
 import com.example.codify.post.dto.PostDTO;
 import com.example.codify.post.service.PostService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
 
-    @Autowired
-    private PostService postService; //PostService 객체 자동 주입
+    private final PostService postService; //PostService 객체 자동 주입
 
     @GetMapping("/month/{postIdPrefix}")
     public ResponseEntity<List<PostDTO>> getPostsByMonth(@PathVariable String postIdPrefix) {

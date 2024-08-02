@@ -1,7 +1,7 @@
 package com.example.codify.post.entity;
 
 import com.example.codify.BaseEntity;
-import com.example.codify.member.entity.Member;
+import com.example.codify.member.Member;
 import jakarta.persistence.*; // JPA 관련 어노테이션 사용
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +11,10 @@ import lombok.Setter;
 @Entity
 @Table(name = "post") // post라는 db table과 매핑
 public class Post extends BaseEntity {
+
+    @Id
+    @Column(name = "post_id")
+    private String postId; // Long -> String으로 변경
 
     @Column(length = 64, nullable = false)
     private String title; // 게시물 제목 저장, 최대 64자, 필수입력
@@ -24,9 +28,5 @@ public class Post extends BaseEntity {
 
     @Column(length = 512)
     private String aiResponse;
-
-    @Id
-    @Column(name = "post_id")
-    private String postId; // Long -> String으로 변경
 
 }

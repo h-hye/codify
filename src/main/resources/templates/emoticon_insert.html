@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoticon Test</title>
+    <script>
+        function uploadFile() {
+            var formData = new FormData(document.getElementById('uploadForm'));
+
+            fetch('/emoticons', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    document.getElementById('result').innerText = 'File uploaded successfully. ID: ' + data.emoticonId;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('result').innerText = 'Error uploading file';
+                });
+        }
+
+        function getEmoticon() {
+            var id = document.getElementById('getId').value;
+
+            fetch(`/emoticons/${id}`, {
+                method: 'GET'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('getResult').innerText = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('getResult').innerText = 'Error fetching emoticon';
+                });
+        }
+
+        function deleteEmoticon() {
+            var id = document.getElementById('deleteId').value;
+
+            fetch(`/emoticons/${id}`, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('deleteResult').innerText = 'Emoticon deleted successfully';
+                    } else {
+                        document.getElementById('deleteResult').innerText = 'Error deleting emoticon';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('deleteResult').innerText = 'Error deleting emoticon';
+                });
+        }
+    </script>
+</head>
+<body>
+<h1>Emoticon Test</h1>
+
+<h2>Upload Emoticon</h2>
+<form id="uploadForm">
+    <label for="emoticonTitle">Title:</label>
+    <input type="text" id="emoticonTitle" name="emoticonTitle" required><br>
+    <label for="emoticonInfo">Info:</label>
+    <textarea id="emoticonInfo" name="emoticonInfo" required></textarea><br>
+    <label for="emoticonTag">Tag:</label>
+    <input type="text" id="emoticonTag" name="emoticonTag" required><br>
+    <label for="emoticonImg">Image:</label>
+    <input type="file" id="emoticonImg" name="emoticonImg" required><br>
+    <button type="button" onclick="uploadFile()">Upload</button>
+</form>
+<p id="result"></p>
+
+<h2>Get Emoticon</h2>
+<label for="getId">ID:</label>
+<input type="text" id="getId" required>
+<button type="button" onclick="getEmoticon()">Get Emoticon</button>
+<pre id="getResult"></pre>
+
+<h2>Delete Emoticon</h2>
+<label for="deleteId">ID:</label>
+<input type="text" id="deleteId" required>
+<button type="button" onclick="deleteEmoticon()">Delete Emoticon</button>
+<p id="deleteResult"></p>
+</body>
+</html>

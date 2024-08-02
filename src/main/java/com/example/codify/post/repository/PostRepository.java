@@ -15,4 +15,3 @@ public interface PostRepository extends JpaRepository<Post, String> {
 
     boolean existsById(String postId);
 }
-

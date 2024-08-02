@@ -25,7 +25,7 @@ public class OpenAiService {
         headers.set("Authorization", "Bearer " + apiKey);
         headers.set("Content-Type", "application/json");
 
-        String requestJson = "{ \"model\": \"gpt-3.5-turbo\", \"messages\": [{\"role\": \"user\", \"content\": \"" + content + "\"}], \"max_tokens\": 100 }";
+        String requestJson = "{ \"model\": \"gpt-3.5-turbo\", \"messages\": [{\"role\": \"user\", \"content\": \"" + content + "\"}], \"max_tokens\": 1 }";
         HttpEntity<String> entity = new HttpEntity<>(requestJson, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, entity, String.class);

@@ -5,6 +5,7 @@ import com.example.codify.member.entity.Member;
 import jakarta.persistence.*; // JPA 관련 어노테이션 사용
 import lombok.Getter;
 import lombok.Setter;
+import com.example.codify.emoticon.EmoticonEntity; // 이모티콘 엔티티 추가
 
 @Getter
 @Setter
@@ -29,4 +30,7 @@ public class Post extends BaseEntity {
     @Column(name = "post_id")
     private String postId; // Long -> String으로 변경
 
+    private Long emoticonId; // 이모티콘 ID 필드 추가
+
+    private String getEmoticonUrl;
 }

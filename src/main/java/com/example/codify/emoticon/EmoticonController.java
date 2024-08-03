@@ -21,7 +21,7 @@ public class EmoticonController {
   private FileService fileService;
 
   @PostMapping
-  public ResponseEntity<EmoticonEntity> createEmoticon(@RequestParam("id") Long id, // ID 수동 입력
+  public ResponseEntity<EmoticonEntity> createEmoticon(@RequestParam("id") Long id,
                                                        @RequestParam("title") String title,
                                                        @RequestParam("info") String info,
                                                        @RequestParam("tag") String tag,
@@ -30,7 +30,7 @@ public class EmoticonController {
       String filePath = fileService.saveFile(file);
 
       EmoticonEntity emoticon = EmoticonEntity.builder()
-              .emoticonId(id)  // ID 수동 설정
+              .emoticonId(id)
               .emoticonTitle(title)
               .emoticonInfo(info)
               .emoticonTag(tag)
@@ -44,13 +44,13 @@ public class EmoticonController {
     }
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("/id/{id}")
   public ResponseEntity<EmoticonEntity> getEmoticon(@PathVariable Long id) {
     Optional<EmoticonEntity> emoticon = emoticonService.getEmoticonById(id);
     return emoticon.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/id/{id}")
   public ResponseEntity<Void> deleteEmoticon(@PathVariable Long id) {
     emoticonService.deleteEmoticon(id);
     return ResponseEntity.noContent().build();
@@ -58,6 +58,14 @@ public class EmoticonController {
 
   @GetMapping("/tag/{tag}")
   public List<EmoticonEntity> getEmoticonsByTag(@PathVariable String tag) {
-    return emoticonService.getEmoticonsByTag(tag);  // 태그로 이모티콘 조회
+    return emoticonService.getEmoticonsByTag(tag);
+  }
+
+  // 추가된 코드: 모든 이모티콘 조회
+  @GetMapping
+  public ResponseEntity<List<EmoticonEntity>> getAllEmoticons() {
+    List<EmoticonEntity> emoticons = emoticonService.getAllEmoticons();
+    return ResponseEntity.ok(emoticons);
   }
 }
+

@@ -29,4 +29,15 @@ public class EmoticonService {
   public List<EmoticonEntity> getEmoticonsByTag(String tag) {
     return emoticonRepository.findByEmoticonTagContaining(tag);  // 태그로 이모티콘 조회
   }
+
+  public List<EmoticonEntity> getAllEmoticons() {
+    return emoticonRepository.findAll();  // 모든 이모티콘 조회
+  }
+
+  // 이모티콘 ID로 URL을 가져오는 메서드
+  public String getEmoticonUrl(Long emoticonId) {
+    EmoticonEntity emoticon = emoticonRepository.findByEmoticonId(emoticonId);
+    return (emoticon != null) ? emoticon.getEmoticonImg() : null; // URL 반환 또는 null
+  }
+
 }

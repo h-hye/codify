@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 public class OpenAiService {
 
     private final String apiKey = "secret";
+    ;
     private final RestTemplate restTemplate = new RestTemplate();
     private final String apiUrl = "https://api.openai.com/v1/chat/completions";
     private final ObjectMapper objectMapper = new ObjectMapper();

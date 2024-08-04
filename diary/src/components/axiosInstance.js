@@ -1,37 +1,34 @@
-// axiosInstance.js
 import axios from 'axios';
 
+BASE_URL = 'http://localhost:8080';
+
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080', // URL 추가해야합니당
+    baseURL: BASE_URL, // 실제 백엔드 URL로 변경 필요
 });
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        // 요청이 시작되기 전에 로딩 상태를 설정
+        const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰 가져오기
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`; // 헤더에 토큰 추가
+        }
         console.log('Loading started');
-        // 모든 요청에 대한 API 키 추가를 하나의 코드로 설정
-        config.params = {
-            ...config.params,
-        };
-        return config;
+        return config; // 수정된 config 객체 반환
     },
     (error) => {
-        // 요청 에러 처리
         console.error('Request error:', error);
-
-        return Promise.reject(error);
+        return Promise.reject(error); // 에러 발생 시 에러 반환
     }
 );
 
 axiosInstance.interceptors.response.use(
     (response) => {
-        // 응답 데이터 반환 처리 (반환 처리 전 데이터를 추가/변경/삭제 가능)
-        return response;
+        return response; // 응답 데이터를 반환하기 전에 처리
     },
-    (error) => {
-        // 응답 에러 처리
+    async (error) => {
+        const originalRequest = error.config;
+
         if (error.response) {
-            // 서버 응답이 있는 경우
             const { status } = error.response;
             switch (status) {
                 case 400:
@@ -39,8 +36,32 @@ axiosInstance.interceptors.response.use(
                     break;
                 case 401:
                     console.error('401: 인증이 필요합니다. 로그인 해주세요.');
-                    // 로그인 페이지로 리디렉션하거나 토큰 갱신을 요청할 수 있습니다.
-                    break;
+                    try {
+                        const refreshToken = localStorage.getItem('refreshToken'); // 로컬 스토리지에서 refresh 토큰 가져오기
+                        if (!refreshToken) {
+                            // refresh 토큰이 없으면 로그인 페이지로 리디렉션
+                            localStorage.removeItem('token');
+                            localStorage.removeItem('refreshToken');
+                            window.location.href = '/login';
+                            return Promise.reject(error);
+                        }
+
+                        const response = await axios.post('http://localhost:8080/api/members/refresh-token', {
+                            token: refreshToken,
+                        });
+
+                        const newToken = response.data.token;
+                        localStorage.setItem('token', newToken); // 새로운 access 토큰 저장
+
+                        originalRequest.headers.Authorization = `Bearer ${newToken}`; // 원래 요청의 Authorization 헤더를 업데이트
+                        return axiosInstance(originalRequest); // 원래 요청을 재시도
+                    } catch (refreshError) {
+                        console.error('Refresh token error:', refreshError);
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('refreshToken');
+                        window.location.href = '/login';
+                        return Promise.reject(refreshError);
+                    }
                 case 403:
                     console.error('403: 권한이 없습니다.');
                     break;
@@ -57,10 +78,8 @@ axiosInstance.interceptors.response.use(
                     console.error(`오류 발생: ${status} - ${error.response.statusText}`);
             }
         } else if (error.request) {
-            // 요청이 전송되었지만 응답이 없는 경우
             console.error('서버로부터 응답을 받지 못했습니다. 네트워크 상태를 확인하거나 나중에 다시 시도해주세요.');
         } else {
-            // 요청을 설정하는 중에 오류가 발생한 경우
             console.error('요청 설정 중 오류가 발생했습니다:', error.message);
         }
         return Promise.reject(error);

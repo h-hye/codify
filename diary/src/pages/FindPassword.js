@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import '../styles/Find.css';
 
 const FindPassword = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
-    const navigate = useNavigate();
 
     const handleFindPassword = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.get(`/api/members/find-password?name=${name}&email=${email}`);
+            const response = await axios.get('/api/members/find-password', {
+                params: {
+                    name,
+                    email,
+                },
+            });
             setMessage(response.data.message);
         } catch (error) {
             console.error('Password find failed:', error);

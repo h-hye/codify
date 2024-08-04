@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axiosInstance from '../components/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ChangePassword.css';
 
-const ChangePassword = () => {
+const ChangePassword = ({ id }) => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -11,7 +11,7 @@ const ChangePassword = () => {
 
     const handleChangePassword = async () => {
         try {
-            await axios.patch('/api/members/change-password', {
+            await axiosInstance.patch(`/api/members/change-password/${id}`, {
                 oldPassword,
                 newPassword,
             });

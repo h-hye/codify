@@ -31,3 +31,11 @@
 .mypage-container button:hover {
     opacity: 0.9;
 }
+
+.mypage-container .delete-button {
+    background-color: #ff4d4d;
+}
+
+.mypage-container .delete-button:hover {
+    opacity: 0.9;
+}

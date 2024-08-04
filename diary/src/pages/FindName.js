@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import '../styles/Find.css';
 
 const FindName = () => {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
-    const navigate = useNavigate();
 
     const handleFindName = async (e) => {
         e.preventDefault();

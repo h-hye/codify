@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../components/axiosInstance';
 import '../styles/Login.css';
 
 const Login = () => {
@@ -56,12 +56,13 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/members/join', {
+            const response = await axiosInstance.post('/api/members/login', {
                 email,
                 password,
             });
-            console.log(response.data);
-            localStorage.setItem('token', response.data.token); // 토큰 저장
+            const { token, memberId } = response.data;
+            localStorage.setItem('token', token); // 토큰 저장
+            localStorage.setItem('memberId', memberId); // memberId 저장
             navigate('/main');
         } catch (error) {
             console.error('Login failed:', error);

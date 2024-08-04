@@ -21,6 +21,7 @@ h2 {
 }
 
 .title-input,
+.memberId-input, /* 추가된 입력 필드 스타일 */
 .image-input,
 .submit-button {
   padding: 10px;
@@ -111,4 +112,32 @@ h2 {
 
 .back-button:hover {
   background-color: #0056b3;
+}
+
+.emotion-selector {
+  display: flex;
+  gap: 10px;
+}
+
+.emotion-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.emotion-icon {
+  width: 50px;
+  height: 50px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+}
+
+.emotion-icon.selected {
+  border-color: #007BFF;
+}
+
+.emotion-item span {
+  margin-top: 5px;
+  font-size: 14px;
 }

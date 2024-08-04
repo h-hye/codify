@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../components/axiosInstance';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/Main.css';
@@ -7,10 +8,11 @@ import '../styles/Main.css';
 const Main = () => {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [diaryEntries, setDiaryEntries] = useState({});
+    const [selectedDate, setSelectedDate] = useState(new Date());
 
     useEffect(() => {
-        // 로그인 상태 확인 (예: 토큰 존재 여부)
-        const token = localStorage.getItem('token'); // 예시: 로컬 스토리지에 저장된 토큰 확인
+        const token = localStorage.getItem('token');
         if (token) {
             setIsLoggedIn(true);
         } else {
@@ -18,8 +20,51 @@ const Main = () => {
         }
     }, [navigate]);
 
+    useEffect(() => {
+        const fetchDiaryEntries = async () => {
+            try {
+                const memberId = localStorage.getItem('memberId');
+                const postIdPrefix = selectedDate.toISOString().slice(0, 7).replace('-', '');
+                const response = await axiosInstance.post(
+                    '/api/posts/month',
+                    { postIdPrefix },
+                    {
+                        headers: { 'X-User-Id': memberId },
+                    }
+                );
+                const entries = response.data.reduce((acc, entry) => {
+                    const date = entry.postId.slice(0, 8);
+                    acc[date] = entry;
+                    return acc;
+                }, {});
+                setDiaryEntries(entries);
+            } catch (error) {
+                console.error('Error fetching diary entries:', error);
+            }
+        };
+
+        fetchDiaryEntries();
+    }, [selectedDate]);
+
     const handleDateClick = (value) => {
-        navigate(`/diary-details/${value.toISOString().split('T')[0]}`);
+        const dateString = value.toISOString().split('T')[0].replace(/-/g, '');
+        navigate(`/diary-details/${dateString}`);
+    };
+
+    const tileContent = ({ date, view }) => {
+        if (view === 'month') {
+            const dateString = date.toISOString().split('T')[0].replace(/-/g, '');
+            if (diaryEntries[dateString]) {
+                const { title, emoticonUrl } = diaryEntries[dateString]; // emoticonUrl을 사용
+                return (
+                    <div className='diary-entry-title'>
+                        {title}
+                        {emoticonUrl && <img src={emoticonUrl} alt='emoticon' className='emotion-icon-small' />}
+                    </div>
+                );
+            }
+        }
+        return null;
     };
 
     return (
@@ -42,7 +87,12 @@ const Main = () => {
                         MyPage
                     </a>
                 </div>
-                <Calendar onClickDay={handleDateClick} className='react-calendar' />
+                <Calendar
+                    onClickDay={handleDateClick}
+                    className='react-calendar'
+                    tileContent={tileContent}
+                    onActiveStartDateChange={({ activeStartDate }) => setSelectedDate(activeStartDate)}
+                />
             </div>
         )
     );

@@ -35,7 +35,6 @@
     object-fit: cover;
 }
 
-
 .nav-buttons button {
     flex: 1;
     padding: 10px;
@@ -61,13 +60,14 @@
 }
 
 .react-calendar__tile {
-    color:black;
+    color: black;
     height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 5px;
     transition: background-color 0.3s;
+    position: relative;
 }
 
 .react-calendar__tile--now {
@@ -91,16 +91,13 @@
     color: black;
 }
 
-
 .react-calendar__month-view__days__day {
     color: black; 
 }
 
-
 .react-calendar__month-view__days__day--sat {
     color: blue; 
 }
-
 
 .react-calendar__month-view__days__day--sun {
     color: red; 
@@ -114,11 +111,9 @@
     color: black;
 }
 
-
 .react-calendar__navigation__arrow {
     color: black;
 }
-
 
 .react-calendar__navigation__next-button,
 .react-calendar__navigation__prev-button {
@@ -129,3 +124,20 @@
     color: black;
 }
 
+.diary-entry-title {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 3px;
+    padding: 2px 5px;
+    font-size: 12px;
+    text-align: center;
+    color: black;
+}
+.emotion-icon-small {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}

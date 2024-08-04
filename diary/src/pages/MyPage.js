@@ -47,7 +47,6 @@ const MyPage = () => {
                 <strong>가입일수:</strong> {days}일
             </p>
             <button onClick={() => navigate('/change-name')}>이름 변경</button>
-            <button onClick={() => navigate('/change-password')}>비밀번호 변경</button>
             <button onClick={handleLogout}>로그아웃</button>
         </div>
     );

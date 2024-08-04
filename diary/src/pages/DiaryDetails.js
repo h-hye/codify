@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axiosInstance from '../components/axiosInstance';
+import axiosInstance from '../apis/axiosInstance';
 import '../styles/DiaryDetails.css';
 
 const DiaryDetails = () => {
@@ -26,7 +26,7 @@ const DiaryDetails = () => {
 
     const handleUpdate = async () => {
         try {
-            await axios.put(`/api/posts/${id}`, {
+            await axiosInstance.put(`/api/posts/${id}`, {
                 title,
                 content,
             });
@@ -38,7 +38,7 @@ const DiaryDetails = () => {
 
     const handleDelete = async () => {
         try {
-            await axios.delete(`/api/posts/${id}`);
+            await axiosInstance.delete(`/api/posts/${id}`);
             alert('일기가 삭제되었습니다.');
             navigate('/diary-list'); // 일기 목록 페이지로 이동
         } catch (error) {

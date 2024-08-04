@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../components/axiosInstance';
+import authInstance from '../apis/authInstance';
 import '../styles/Signup.css';
 
 const Signup = () => {
@@ -96,13 +96,13 @@ const Signup = () => {
 
         if (isValid) {
             try {
-                await axiosInstance.post('/api/members/join', {
-                    nickname: nickname,
-                    email: email,
-                    password: password,
-                });
+                // await authInstance.post('/api/members/join', {
+                //     nickname: nickname,
+                //     email: email,
+                //     password: password,
+                // });
                 setAlertMessage(['회원가입에 성공했습니다.', '잠시 후 로그인 창으로 이동합니다.']); // 변경된 부분
-                setTimeout(() => navigate('/login'), 1000); // 2초 후 로그인 페이지로 이동
+                setTimeout(() => navigate('/login'), 2000); // 2초 후 로그인 페이지로 이동
             } catch (error) {
                 console.error(error);
                 if (error.response) {
@@ -185,7 +185,7 @@ const Signup = () => {
                                 <p key={index}>{msg}</p>
                             )
                         )}
-                        <button onClick={() => setAlertMessage([])}>닫기</button> {/* 변경된 부분 */}
+                        <button onClick={() => setAlertMessage('')}>닫기</button> {/* 변경된 부분 */}
                     </div>
                 </div>
             )}

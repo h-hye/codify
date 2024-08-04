@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../apis/axiosInstance';
 import '../styles/Diary.css';
 
 const Diary = () => {
@@ -26,7 +26,7 @@ const Diary = () => {
                 formData.append('image', image);
             }
 
-            const response = await axios.post('/api/diary', formData, {
+            const response = await axiosInstance.post('/api/diary', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

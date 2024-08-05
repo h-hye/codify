@@ -15,16 +15,16 @@ import java.time.LocalDateTime;
 public class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
 
     @CreatedDate
-    private LocalDateTime createdAt;
+    private LocalDateTime created_at;
 
     @LastModifiedDate
-    private LocalDateTime updateAt;
+    private LocalDateTime update_at;
 
     @Setter
     @Column(columnDefinition = "boolean default false")
-    private boolean isDeleted;
+    private boolean is_deleted;
 
 }

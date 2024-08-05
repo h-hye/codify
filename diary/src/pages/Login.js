@@ -41,33 +41,35 @@ const Login = () => {
     };
 
     return (
-        <div className='login-container'>
-            <h2>감정일기</h2>
-            <form onSubmit={handleSubmit}>
-                <input type='text' placeholder='이메일' value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input
-                    type='password'
-                    placeholder='비밀번호'
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button type='submit' className='login'>
-                    로그인
-                </button>
-            </form>
-            <p>
-                계정이 없으신가요? <Link to='/signup'>회원가입</Link>
-            </p>
-            {alertMessage && (
-                <div className='modal-background'>
-                    <div className='custom-alert'>
-                        {alertMessage.map((msg, index) => (
-                            <p key={index}>{msg}</p>
-                        ))}
-                        <button onClick={() => setAlertMessage('')}>닫기</button>
+        <div class='login-outer-container'>
+            <div className='login-container'>
+                <h2>감정일기</h2>
+                <form onSubmit={handleSubmit}>
+                    <input type='text' placeholder='이메일' value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input
+                        type='password'
+                        placeholder='비밀번호'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button type='submit' className='login'>
+                        로그인
+                    </button>
+                </form>
+                <p>
+                    계정이 없으신가요? <Link to='/signup'>회원가입</Link>
+                </p>
+                {alertMessage && (
+                    <div className='login-modal-background'>
+                        <div className='login-custom-alert'>
+                            {alertMessage.map((msg, index) => (
+                                <p key={index}>{msg}</p>
+                            ))}
+                            <button onClick={() => setAlertMessage('')}>닫기</button>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 };

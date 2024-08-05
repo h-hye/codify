@@ -42,7 +42,11 @@ const Main = () => {
                         MyPage
                     </a>
                 </div>
-                <Calendar onClickDay={handleDateClick} className='react-calendar' />
+                <div className='calendar-container-wrapper'>
+                    <div className='calendar-container'>
+                        <Calendar onClickDay={handleDateClick} className='react-calendar' />
+                    </div>
+                </div>
             </div>
         )
     );

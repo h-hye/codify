@@ -2,6 +2,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100vh; /* 전체 화면 높이를 차지 */
+    background-color: #f0f0f0;
   }
   
   .main-nav {
@@ -9,9 +11,9 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    height: 60px; /* 고정된 높이 */
     background-color: #f0f0f0;
     padding: 10px 0;
-    margin-bottom: 20px;
   }
   
   .main-nav-brand {
@@ -44,13 +46,28 @@
     border-radius: 4px;
   }
   
+  .calendar-container-wrapper {
+    flex-grow: 1; /* 남은 공간을 차지하도록 설정 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .calendar-container {
+    background-color: white; /* 달력 부분 배경색을 하얗게 설정 */
+    padding: 20px; /* 여백 추가 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+  }
+  
   .react-calendar {
-    width: 90%;
-    max-width: 500px;
+    width: 100%;
+    max-width: 1000px; /* 최대 너비 증가 */
+    height: auto;
     border: none;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.125em;
-    margin-bottom: 20px; /* 달력 아래에 간격을 추가합니다. */
   }
   
   .react-calendar__navigation {
@@ -59,11 +76,11 @@
   }
   
   .react-calendar__navigation button {
-    min-width: 44px;
+    min-width: 60px;
     background: none;
     border: none;
-    font-size: 16px;
-    margin: 0 4px;
+    font-size: 24px; /* 버튼 글자 크기를 증가 */
+    margin: 0 6px;
     cursor: pointer;
   }
   
@@ -80,7 +97,7 @@
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 0.75em;
+    font-size: 1em;
   }
   
   .react-calendar__month-view__days {
@@ -91,24 +108,22 @@
   .react-calendar__tile {
     max-width: initial !important;
     text-align: center;
-    padding: 10px 6.6667px;
+    padding: 25px 15px; /* 타일 크기를 키움 */
     background: none;
     border: none;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: 18px; /* 글자 크기를 키움 */
   }
   
   .react-calendar__tile--now {
     background: #6200ea;
     color: white;
-    border-radius: 50%;
   }
   
   .react-calendar__tile--now:hover,
   .react-calendar__tile--now:focus {
     background: #6200ea;
     color: white;
-    border-radius: 50%;
   }
   
   .react-calendar__tile--hasActive {
@@ -118,7 +133,6 @@
   .react-calendar__tile--active {
     background: #006edc;
     color: white;
-    border-radius: 50%;
   }
   
   .react-calendar__tile--active:hover,
@@ -139,6 +153,5 @@
   .react-calendar__tile:enabled:hover,
   .react-calendar__tile:enabled:focus {
     background: #e6e6e6;
-    border-radius: 50%;
   }
   

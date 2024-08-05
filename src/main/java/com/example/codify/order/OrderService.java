@@ -2,19 +2,16 @@ package com.example.codify.order;
 
 import com.example.codify.member.Member;
 import com.example.codify.member.MemberRepository;
-import com.example.codify.order.dto.Order;
+import com.example.codify.order.dto.OrderCreationRequest;
 import com.example.codify.product.Product;
 import com.example.codify.product.ProductRepository;
-import lombok.Getter;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
-import java.util.Set;
 
-@Getter
-@Setter
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -24,20 +21,27 @@ public class OrderService {
     private final MemberRepository memberRepository;
     private final OrderRepository orderRepository;
 
-    public Order createOrder(Orders orders) {
+    public Order createOrder(OrderCreationRequest orderCreationRequest){
 
-        Member member = memberRepository.findByName(orders.getMember())
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+        // 고객 정보
+        Member member = memberRepository.findByName(orderCreationRequest.orderName())
+                .orElseThrow(EntityNotFoundException::new);
 
-        Product product = productRepository.findById(orders.getProductName())
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+        // 상품 정보
+        Product product = productRepository.findByProductName(orderCreationRequest.productName())
+                .orElseThrow(EntityNotFoundException::new);
 
-        orders.getMember(member);
-        orders.setProduct(product);
-        orders.setPrice(product.getPrice());  // 상품의 현재 가격을 설정
-        orders.setOrdersDate(LocalDateTime.now());
+        // 주문 생성
+        Order order = new Order();
+        order.setMember(member);
+        order.setProduct(product);
+        order.setCount(orderCreationRequest.productCount());
+        order.setPaymentMethod(orderCreationRequest.paymentMethod());
+        order.setOrderDate(LocalDateTime.now());
 
-        return orderRepository.save(orders);
+        // 가격
+        order.setPrice(orderCreationRequest.productCount() * product.getProductPrice());
 
+        return orderRepository.save(order);
     }
 }

@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
                     // 토큰이 만료된 경우임
                     console.error('401: 인증이 필요합니다. 로그인 해주세요.');
                     try {
-                        await getNewRefreshToken();
+                        await getNewRefreshToken(); // refresh.js에 있는 함수
                         const newAccessToken = localStorage.getItem('access');
                         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
                         return axiosInstance(originalRequest);

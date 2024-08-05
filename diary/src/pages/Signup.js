@@ -96,11 +96,11 @@ const Signup = () => {
 
         if (isValid) {
             try {
-                // await authInstance.post('/api/members/join', {
-                //     nickname: nickname,
-                //     email: email,
-                //     password: password,
-                // });
+                await authInstance.post('/api/members/join', {
+                    nickname: nickname,
+                    email: email,
+                    password: password,
+                });
                 setAlertMessage(['회원가입에 성공했습니다.', '잠시 후 로그인 창으로 이동합니다.']); // 변경된 부분
                 setTimeout(() => navigate('/login'), 2000); // 2초 후 로그인 페이지로 이동
             } catch (error) {

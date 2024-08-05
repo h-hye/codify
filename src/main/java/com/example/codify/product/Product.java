@@ -1,9 +1,11 @@
 package com.example.codify.product;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
 import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 @Entity
 @Data
@@ -11,7 +13,6 @@ import javax.persistence.Table;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
     private String productId;
 

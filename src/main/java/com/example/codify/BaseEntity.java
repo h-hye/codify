@@ -1,9 +1,6 @@
 package com.example.codify;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -16,16 +13,16 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
-    @Id
-    private String id;
 
     @CreatedDate
+    @Column(name = "created_at", columnDefinition = "datetime(6)")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    private LocalDateTime updateAt;
+    @Column(name = "updated_at", columnDefinition = "datetime(6)")
+    private LocalDateTime updatedAt;
 
-    @Setter
+    @Setter @Getter
     @Column(columnDefinition = "boolean default false")
     private boolean isDeleted;
 

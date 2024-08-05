@@ -1,11 +1,11 @@
 package com.example.codify.jwt;
 
 import com.example.codify.member.Member;
+import com.example.codify.member.MemberCustomException;
 import com.example.codify.member.MemberRepository;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import com.example.codify.member.dto.MemberResponseDto;
+import com.example.codify.post.mapper.PostMapper;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.persistence.EntityExistsException;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -23,11 +24,35 @@ import java.util.Date;
 public class JwtService {
 
     private final MemberRepository memberRepository;
+    private final PostMapper postMapper;
 
     @Value("${jwt.secretKey}")
     private String secretKey;
 
-    public String create(String email) {
+    @Value("${jwt.refreshSecretKey}")
+    private String refreshSecretKey;
+
+    public String createAccessToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuer("codify server")
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 1일
+                .claim("email", email)
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String createRefreshToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuer("codify server")
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 30일
+                .claim("email", email)
+                .signWith(Keys.hmacShaKeyFor(refreshSecretKey.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    /*public String create(String email) {
         return "Bearer " + Jwts.builder()
                 .subject("codify token")
                 .issuer("codify server") //작성자
@@ -39,7 +64,7 @@ public class JwtService {
                         Keys.hmacShaKeyFor(
                                 secretKey.getBytes(StandardCharsets.UTF_8)))
                 .compact();
-    }
+    }*/
     public Member parse(String token) {
         try {
             String email = getEmail(token);
@@ -65,13 +90,40 @@ public class JwtService {
 
     private String getEmail(String token) {
         return Jwts.parser()
-                .verifyWith(
-                        Keys.hmacShaKeyFor(
-                                secretKey.getBytes(StandardCharsets.UTF_8)))
+                .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                 .build()
-                .parseSignedClaims(token.substring(7))
-                .getPayload()
+                .parseClaimsJws(token.replace("Bearer ", ""))
+                .getBody()
                 .get("email", String.class);
+    }
+
+    public Long extractMemberId(String token) {
+        JwtParser parser = Jwts.parser()
+                .setSigningKey(secretKey.getBytes()) // 비밀키를 바이트 배열로 변환
+                .build();
+
+        Claims claims = parser.parseClaimsJws(token.replace("Bearer ", ""))
+                .getBody();
+        return Long.parseLong(claims.get("memberId").toString());
+    }
+
+
+    public MemberResponseDto getMemberDetails(Long memberId) {
+        Optional<Member> memberOptional = memberRepository.findById(memberId);
+        if (memberOptional.isEmpty()) {
+            throw new MemberCustomException.MemberNotFoundException(); // 적절한 예외를 사용합니다.
+        }
+
+        Member member = memberOptional.get();
+        String token = createAccessToken(member.getEmail()); // JWT 토큰을 생성합니다.
+
+        String accessToken = createAccessToken(member.getEmail());
+        String refreshToken = createRefreshToken(member.getEmail());
+
+        // MemberResponseDto를 사용하여 변환
+        MemberResponseDto memberResponseDto = new MemberResponseDto(member, accessToken, refreshToken);
+
+        return memberResponseDto;
     }
 }
 

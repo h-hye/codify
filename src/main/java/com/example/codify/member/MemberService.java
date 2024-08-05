@@ -1,10 +1,9 @@
 package com.example.codify.member;
 
-import com.example.codify.member.dto.ChangeNameRequest;
-import com.example.codify.member.dto.JoinMemberRequest;
-import com.example.codify.member.dto.LoginMemberRequest;
+import com.example.codify.jwt.JwtService;
+import com.example.codify.member.dto.*;
 import com.example.codify.member.MemberCustomException.*;
-import com.example.codify.member.dto.ChangePasswordRequest;
+import com.example.codify.post.dto.PostDTO;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,6 +26,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public void joinMember(JoinMemberRequest request) {
         String joinName = request.name();
@@ -39,20 +41,24 @@ public class MemberService {
         memberRepository.save(member);
         }
 
-    public Member loginMember(LoginMemberRequest request) {
-        String loginEmail = request.email();
-        String loginPassword = request.password();
+    public MemberResponseDto loginMember(LoginMemberRequest request) {
+        String email = request.email();
+        String password = request.password();
 
-        Member member = memberRepository.findByEmail(loginEmail)
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(MemberNotFoundException::new);
 
-        if (!passwordEncoder.matches(loginPassword, member.getPassword())) {
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             log.error("회원 정보가 없습니다.");
             throw new IncorrectPasswordException();
         }
-        log.info("로그인 성공");
 
-        return member;
+        // Access Token과 Refresh Token 생성
+        String accessToken = jwtService.createAccessToken(email);
+        String refreshToken = jwtService.createRefreshToken(email);
+
+        // MemberResponseDto를 생성하여 토큰과 함께 반환
+        return new MemberResponseDto(member, accessToken, refreshToken);
     }
 
     public String findname(String email) {

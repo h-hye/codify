@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.example.codify.AI.service.OpenAiService;
+import org.springframework.web.bind.annotation.RequestPart;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class PostService {
     private final PostMapper postMapper;
     private final OpenAiService openAiService;
 
-    public List<PostDTO> getPostsByMonth(String postIdPrefix) {
+    /*public List<PostDTO> getPostsByMonth(String postIdPrefix) {
         // Repository를 통해 특정 접두사로 시작하는 게시물 리스트 조회
         List<Post> posts = postRepository.findByPostIdStartingWith(postIdPrefix);
         // Post 엔티티를 PostDTO로 변환
@@ -33,20 +34,31 @@ public class PostService {
                 .map(postMapper::toDto)
                 .collect(Collectors.toList());
     }
+*/
 
-    public Optional<PostDTO> getPostById(String postId) { //ID로 게시물 조회, PostDTO 반환
-        return postRepository.findById(postId) //특정 ID로 Post 엔티티 조회
-                .map(postMapper::toDto); //Post를 PostDTO로 변환하여 반환. 게시물 미존재 시 빈 Optional 반환
+    public List<PostDTO> getPostsByMonth(String postIdPrefix, Long memberId) {
+        return postRepository.findByPostIdStartingWithAndMember_MemberId(postIdPrefix, memberId)
+                .stream()
+                .map(postMapper::toDto)
+                .collect(Collectors.toList());
     }
 
-    public PostDTO createPost(PostDTO postDTO) {
+
+    // postId와 memberId로 게시물 조회
+    public Optional<PostDTO> getPostById(String postId, Long memberId) {
+        Optional<Post> postOptional = postRepository.findByPostIdAndMember_MemberId(postId, memberId);
+        return postOptional.map(postMapper::toDto); // Optional<Post>를 Optional<PostDTO>로 변환
+    }
+
+    public Optional<PostDTO> getPostByIdAndMemberId(String postId, Long memberId) {
+        return postRepository.findByPostIdAndMember_MemberId(postId, memberId)
+                .map(postMapper::toDto); // Post를 PostDTO로 변환하여 반환
+    }
+
+
+    public PostDTO createPost(@RequestPart("post") PostDTO postDTO) {
         // 클라이언트에서 제공한 postId를 가져옵니다.
         String postId = postDTO.getPostId();
-
-        // 주어진 postId가 이미 존재하는지 확인합니다.
-        if (postRepository.existsById(postId)) {
-            throw new RuntimeException("Post ID already exists");
-        }
 
         // Member 정보 설정 (선택적)
         Member member = null;

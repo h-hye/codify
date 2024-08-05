@@ -12,15 +12,17 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public class BaseEntity {
 
     @CreatedDate
+    @Column(name = "created_at", columnDefinition = "datetime(6)")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
+    @Column(name = "updated_at", columnDefinition = "datetime(6)")
     private LocalDateTime updatedAt;
 
-    @Setter
+    @Setter @Getter
     @Column(columnDefinition = "boolean default false")
     private boolean isDeleted;
 

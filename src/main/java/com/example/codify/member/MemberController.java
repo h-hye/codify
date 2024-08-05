@@ -2,11 +2,13 @@ package com.example.codify.member;
 
 import com.example.codify.jwt.JwtService;
 import com.example.codify.member.dto.*;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,17 +25,16 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginMemberRequest request) {
-
+    public ResponseEntity<?> login(@RequestBody LoginMemberRequest request) {
         try {
-            Member member = memberService.loginMember(request);
-
-            String token = jwtService.create(member.getEmail());
-            return ResponseEntity.ok()
-                    .header("Authorization", token)
-                    .body("로그인 성공");
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.ok().body("회원 정보가 없습니다.");
+            MemberResponseDto response = memberService.loginMember(request);
+            return ResponseEntity.ok(response);
+        } catch (MemberCustomException.MemberNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("회원 정보를 찾을 수 없습니다.");
+        } catch (MemberCustomException.IncorrectPasswordException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("비밀번호가 올바르지 않습니다.");
         }
     }
 

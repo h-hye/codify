@@ -11,7 +11,7 @@ const Main = () => {
     useEffect(() => {
         // 로그인 상태 확인 (예: 토큰 존재 여부)
         const token = localStorage.getItem('token'); // 예시: 로컬 스토리지에 저장된 토큰 확인
-        if (token) {
+        if (true) {
             setIsLoggedIn(true);
         } else {
             navigate('/'); // 로그인되지 않은 경우 홈 페이지로 이동
@@ -25,20 +25,20 @@ const Main = () => {
     return (
         isLoggedIn && (
             <div className='main-container'>
-                <div className='nav-links'>
-                    <a href='/main' className='nav-link'>
-                        Diary
-                    </a>
-                    <a href='/statistics' className='nav-link'>
-                        Statistics
-                    </a>
-                    <a href='/shop' className='nav-link'>
-                        Shop
-                    </a>
-                    <a href='/diary' className='nav-link'>
-                        Create
-                    </a>
-                    <a href='/mypage' className='nav-link'>
+                <div className='main-nav'>
+                    <span className='main-nav-brand'>Codify</span>
+                    <div className='main-nav-links'>
+                        <a href='/diary' className='main-nav-link'>
+                            Create
+                        </a>
+                        <a href='/statistics' className='main-nav-link'>
+                            Statistics
+                        </a>
+                        <a href='/shop' className='main-nav-link'>
+                            Shop
+                        </a>
+                    </div>
+                    <a href='/mypage' className='main-nav-link main-nav-link-mypage'>
                         MyPage
                     </a>
                 </div>

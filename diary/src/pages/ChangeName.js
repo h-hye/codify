@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import axiosInstance from '../components/axiosInstance';
+import axiosInstance from '../apis/axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ChangeName.css';
 
-const ChangeName = ({ id }) => {
+const ChangeName = () => {
     const [oldName, setOldName] = useState('');
     const [newName, setNewName] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -11,7 +11,7 @@ const ChangeName = ({ id }) => {
 
     const handleChangeName = async () => {
         try {
-            await axiosInstance.patch(`/api/members/change-name/${id}`, {
+            await axiosInstance.patch('/api/members/change-name', {
                 oldName,
                 newName,
             });

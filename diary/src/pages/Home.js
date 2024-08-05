@@ -11,9 +11,6 @@ const Home = () => {
                     <Link to='/login' className='login-button'>
                         로그인
                     </Link>
-                    <Link to='/signup' className='signup-button'>
-                        회원가입
-                    </Link>
                 </nav>
             </header>
             <main>

@@ -10,7 +10,7 @@ const Shop = ({ themes }) => {
             <h1>테마 상점</h1>
             {themes.length === 0 ? (
                 <div className='no-themes'>
-                    <p>테마가 없습니다.</p>
+                    <p>현재 테마가 없습니다.</p>
                     <button onClick={() => navigate('/create')}>테마 만들기</button>
                 </div>
             ) : (

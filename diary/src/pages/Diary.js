@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../components/axiosInstance';
+import axiosInstance from '../apis/axiosInstance';
 import '../styles/Diary.css';
 
 const Diary = () => {
@@ -18,22 +18,16 @@ const Diary = () => {
         const today = new Date().toISOString().split('T')[0].replace(/-/g, ''); // YYYYMMDD 형식
         setDate(today);
 
-        const storedMemberId = localStorage.getItem('memberId');
-        if (storedMemberId) {
-            setMemberId(storedMemberId);
-        }
+        // const fetchEmoticons = async () => {
+        //     try {
+        //         const response = await axiosInstance.get('/api/emoticons');
+        //         setEmoticons(response.data);
+        //     } catch (error) {
+        //         console.error('Error fetching emoticons:', error);
+        //     }
+        // };
 
-        // 이모티콘 목록 불러오기
-        const fetchEmoticons = async () => {
-            try {
-                const response = await axiosInstance.get('/api/emoticons');
-                setEmoticons(response.data);
-            } catch (error) {
-                console.error('Error fetching emoticons:', error);
-            }
-        };
-
-        fetchEmoticons();
+        // fetchEmoticons();
     }, []);
 
     const handleSubmit = async (event) => {
@@ -44,23 +38,31 @@ const Diary = () => {
             formData.append('title', title);
             formData.append('content', content);
             formData.append('memberId', memberId);
-            formData.append('emotion', emotion);
             formData.append('emoticonId', emoticonId);
             if (image) {
                 formData.append('image', image);
             }
 
-            await axiosInstance.post('/api/posts', formData, {
+            const response = await axiosInstance.post('/api/posts', formData, {
                 headers: {
                     'X-User-Id': memberId,
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'multipart/form-data', //
                 },
             });
-
+            console.log('Response:', response.data);
             alert('일기가 저장되었습니다.');
             navigate('/main');
         } catch (error) {
             console.error('Error saving diary:', error);
+            if (error.response) {
+                console.error('Response data:', error.response.data);
+                console.error('Response status:', error.response.status);
+                console.error('Response headers:', error.response.headers);
+            } else if (error.request) {
+                console.error('Request data:', error.request);
+            } else {
+                console.error('Error message:', error.message);
+            }
         }
     };
 
@@ -87,7 +89,13 @@ const Diary = () => {
                     placeholder='일기 제목을 입력하세요...'
                     className='title-input'
                 />
-                <input type='text' value={memberId} readOnly placeholder='사용자 ID' className='memberId-input' />
+                <input
+                    type='text'
+                    value={memberId}
+                    onChange={(e) => setMemberId(e.target.value)}
+                    placeholder='사용자 ID'
+                    className='memberId-input'
+                />
                 <div className='emotion-selector'>
                     {emoticons.map((emoticon) => (
                         <div
@@ -105,7 +113,11 @@ const Diary = () => {
                     ))}
                 </div>
                 <div className='diary-content-row'>
-                    <div className='image-preview'>{image && <img src={URL.createObjectURL(image)} alt='Diary' />}</div>
+                    {image && (
+                        <div className='image-preview'>
+                            <img src={URL.createObjectURL(image)} alt='이미지' />
+                        </div>
+                    )}
                     <textarea
                         value={content}
                         onChange={(e) => setContent(e.target.value)}

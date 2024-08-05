@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../components/axiosInstance';
+import axiosInstance from '../apis/axiosInstance';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/Main.css';
@@ -12,11 +12,11 @@ const Main = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token'); //
         if (token) {
             setIsLoggedIn(true);
         } else {
-            navigate('/'); // 로그인되지 않은 경우 홈 페이지로 이동
+            navigate('/');
         }
     }, [navigate]);
 
@@ -47,7 +47,7 @@ const Main = () => {
     }, [selectedDate]);
 
     const handleDateClick = (value) => {
-        const dateString = value.toISOString().split('T')[0].replace(/-/g, '');
+        const dateString = value.toLocaleDateString('en-CA').replace(/-/g, '');
         navigate(`/diary-details/${dateString}`);
     };
 
@@ -55,7 +55,7 @@ const Main = () => {
         if (view === 'month') {
             const dateString = date.toISOString().split('T')[0].replace(/-/g, '');
             if (diaryEntries[dateString]) {
-                const { title, emoticonUrl } = diaryEntries[dateString]; // emoticonUrl을 사용
+                const { title, emoticonUrl } = diaryEntries[dateString];
                 return (
                     <div className='diary-entry-title'>
                         {title}

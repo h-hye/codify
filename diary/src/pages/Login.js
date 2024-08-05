@@ -43,7 +43,12 @@ const Login = () => {
     return (
         <div class='login-outer-container'>
             <div className='login-container'>
-                <h2>감정일기</h2>
+                <div className='login-header'>
+                    <button className='login-back-button' onClick={() => navigate('/')}>
+                        &lt;
+                    </button>
+                    <h2>감정일기</h2>
+                </div>
                 <form onSubmit={handleSubmit}>
                     <input type='text' placeholder='이메일' value={email} onChange={(e) => setEmail(e.target.value)} />
                     <input

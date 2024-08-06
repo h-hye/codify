@@ -97,7 +97,7 @@ public class JwtService {
                 .get("email", String.class);
     }
 
-    public Long extractMemberId(String token) {
+    /*public Long extractMemberId(String token) {
         JwtParser parser = Jwts.parser()
                 .setSigningKey(secretKey.getBytes()) // 비밀키를 바이트 배열로 변환
                 .build();
@@ -105,8 +105,32 @@ public class JwtService {
         Claims claims = parser.parseClaimsJws(token.replace("Bearer ", ""))
                 .getBody();
         return Long.parseLong(claims.get("memberId").toString());
-    }
+    }*/
 
+    public Long extractMemberId(String token) {
+        try {
+            JwtParser parser = Jwts.parser()
+                    .setSigningKey(secretKey.getBytes()) // 비밀키를 바이트 배열로 변환
+                    .build();
+
+            Claims claims = parser.parseClaimsJws(token.replace("Bearer ", ""))
+                    .getBody();
+
+            // claims에서 memberId를 추출하고, null인지 확인
+            Object memberIdObj = claims.get("memberId");
+            if (memberIdObj == null) {
+                throw new IllegalArgumentException("Token does not contain memberId.");
+            }
+
+            // memberId를 Long으로 변환
+            return Long.parseLong(memberIdObj.toString());
+        } catch (JwtException | IllegalArgumentException e) {
+            // JWT 관련 예외와 기타 잘못된 인자 예외를 처리
+            System.err.println("Invalid token or memberId: " + e.getMessage());
+            throw new RuntimeException("Invalid token or memberId.", e); // 예외를 던져 호출자에게 알림
+        }
+
+    }
 
     public MemberResponseDto getMemberDetails(Long memberId) {
         Optional<Member> memberOptional = memberRepository.findById(memberId);

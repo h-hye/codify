@@ -27,7 +27,7 @@ public class PostController {
     private final JwtService jwtService;
 
 
-    @GetMapping("/post/{id}")
+    @PostMapping("/post/{id}")
     public ResponseEntity<PostDTO> getPost(@PathVariable("id") String postId, @RequestHeader("Authorization") String token) {
         try {
             Long memberId = jwtService.extractMemberId(token);
@@ -50,7 +50,7 @@ public class PostController {
     }
 
 
-
+/*
     @PostMapping("/post/{id}")
     public ResponseEntity<PostDTO> getPostById(
             @PathVariable String id,
@@ -64,7 +64,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
-
+*/
     /*
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable String id) { //url에서 id 추출하여 메서드 파라미터로 전달

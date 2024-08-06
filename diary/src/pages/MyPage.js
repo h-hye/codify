@@ -55,7 +55,9 @@ const MyPage = () => {
     return (
         <div className='mypage-container'>
             <div className='main-nav'>
-                <span className='main-nav-brand'>Codify</span>
+                <span className='main-nav-brand' onClick={() => navigate('/main')}>
+                    Codify
+                </span>
                 <div className='main-nav-links'>
                     <a href='/diary' className='main-nav-link'>
                         Create

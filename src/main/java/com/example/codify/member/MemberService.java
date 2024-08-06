@@ -1,6 +1,5 @@
 package com.example.codify.member;
 
-import com.example.codify.jwt.JwtService;
 import com.example.codify.member.dto.*;
 import com.example.codify.member.MemberCustomException.*;
 import com.example.codify.post.dto.PostDTO;
@@ -26,7 +25,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
 
     public void joinMember(JoinMemberRequest request) {
         String joinName = request.name();
@@ -41,7 +39,7 @@ public class MemberService {
         memberRepository.save(member);
         }
 
-    public MemberResponseDto loginMember(LoginMemberRequest request) {
+    public Long loginMember(LoginMemberRequest request) {
         String email = request.email();
         String password = request.password();
 
@@ -53,12 +51,7 @@ public class MemberService {
             throw new IncorrectPasswordException();
         }
 
-        // Access Token과 Refresh Token 생성
-        String accessToken = jwtService.createAccessToken(email);
-        String refreshToken = jwtService.createRefreshToken(email);
-
-        // MemberResponseDto를 생성하여 토큰과 함께 반환
-        return new MemberResponseDto(member, accessToken, refreshToken);
+        return member.getMemberId();
     }
 
     public String findname(String email) {

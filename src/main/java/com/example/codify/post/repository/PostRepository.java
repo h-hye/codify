@@ -11,9 +11,9 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, String> {
 
 
-    boolean existsByPostId(String postId);
-
-    List<Post> findByMember_MemberId(Long memberId);
+//    boolean existsByPostId(String postId);
+//
+//    List<Post> findByMember_MemberId(Long memberId);
 
     //List<Post> findByMember_MemberIdAndCreatedAt(Long memberId, LocalDate createdDate);
 

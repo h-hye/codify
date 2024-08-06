@@ -2,21 +2,14 @@ package com.example.codify.post.controller;
 
 import com.example.codify.jwt.JwtService;
 import com.example.codify.post.dto.PostDTO;
-import com.example.codify.post.dto.PostRequest;
-import com.example.codify.post.entity.Post;
 import com.example.codify.post.service.PostService;
-import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,16 +20,16 @@ public class PostController {
     private final JwtService jwtService;
 
 
-    @GetMapping("/post/{id}")
-    public ResponseEntity<PostDTO> getPost(@PathVariable("id") String postId, @RequestHeader("Authorization") String token) {
-        try {
-            Long memberId = jwtService.extractMemberId(token);
-            Optional<PostDTO> postDTO = postService.getPostByIdAndMemberId(postId, memberId);
-            return postDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
+//    @PostMapping("/post/{id}")
+//    public ResponseEntity<PostDTO> getPost(@PathVariable("id") String postId, @RequestHeader("Authorization") String token) {
+//        try {
+//            Long memberId = jwtService.extractMemberId(token);
+//            Optional<PostDTO> postDTO = postService.getPostByIdAndMemberId(postId, memberId);
+//            return postDTO.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+//        }
+//    }
 
     @PostMapping("/month")
     public ResponseEntity<List<PostDTO>> getPostsByMonth(@RequestBody PostRequest request, @RequestHeader("Authorization") String token) {

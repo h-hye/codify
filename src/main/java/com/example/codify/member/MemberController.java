@@ -1,22 +1,17 @@
 package com.example.codify.member;
 
-import com.example.codify.jwt.JwtService;
 import com.example.codify.member.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping("/members")
 public class MemberController {
 
     private final MemberService memberService;
-    private final JwtService jwtService;
 
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody JoinMemberRequest request) throws IllegalAccessException {
@@ -25,10 +20,13 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginMemberRequest request) {
+    public ResponseEntity<String> login(@RequestBody LoginMemberRequest request) {
         try {
-            MemberResponseDto response = memberService.loginMember(request);
-            return ResponseEntity.ok(response);
+            Member member = new Member();
+            String memberId = String.valueOf(member.getMemberId());
+            memberService.loginMember(request);
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body("meberId : " + memberId);
         } catch (MemberCustomException.MemberNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("회원 정보를 찾을 수 없습니다.");

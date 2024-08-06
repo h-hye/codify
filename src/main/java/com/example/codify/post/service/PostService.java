@@ -43,18 +43,16 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    public Optional<PostDTO> getPostByIdAndMemberId(String postId, Long memberId) {
+        return postRepository.findByPostIdAndMember_MemberId(postId, memberId)
+                .map(postMapper::toDto); // Post를 PostDTO로 변환하여 반환
+    }
 
     // postId와 memberId로 게시물 조회
     public Optional<PostDTO> getPostById(String postId, Long memberId) {
         Optional<Post> postOptional = postRepository.findByPostIdAndMember_MemberId(postId, memberId);
         return postOptional.map(postMapper::toDto); // Optional<Post>를 Optional<PostDTO>로 변환
     }
-
-    public Optional<PostDTO> getPostByIdAndMemberId(String postId, Long memberId) {
-        return postRepository.findByPostIdAndMember_MemberId(postId, memberId)
-                .map(postMapper::toDto); // Post를 PostDTO로 변환하여 반환
-    }
-
 
     public PostDTO createPost(@RequestPart("post") PostDTO postDTO) {
         // 클라이언트에서 제공한 postId를 가져옵니다.
@@ -80,7 +78,6 @@ public class PostService {
         // 저장된 Post 엔티티를 DTO로 변환하여 반환
         return postMapper.toDto(savedPost);
     }
-
 
 
     public PostDTO updatePost(String postId, PostDTO postDTO) { //특정 ID의 게시물 수정, 수정된 게시물의 DTO 반환

@@ -4,7 +4,9 @@ import com.example.codify.BaseEntity;
 import com.example.codify.member.Member;
 import jakarta.persistence.*; // JPA 관련 어노테이션 사용
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Repository;
 
 
 import java.time.LocalDate;
@@ -16,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 @Entity
+@RequiredArgsConstructor
 @Table(name = "post") // post라는 db table과 매핑
 public class Post extends BaseEntity {
 
@@ -38,24 +41,4 @@ public class Post extends BaseEntity {
     @Column(length = 512)
     private String aiResponse;
 
-    public Post() {
-        // 기본 생성자는 비어있어야 함
-    }
-
-    public Post(String title, String content, Member member, String aiResponse) {
-        this.postId = generatePostId(); // 생성자에서 날짜 기반 ID 생성
-        this.title = title;
-        this.content = content;
-        this.member = member;
-        this.aiResponse = aiResponse;
-    }
-
-    private String generatePostId() {
-        if (this.getCreatedAt() == null) {
-            throw new IllegalStateException("createdAt must not be null");
-        }
-        LocalDate date = this.getCreatedAt().toLocalDate();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        return date.format(formatter);
-    }
 }

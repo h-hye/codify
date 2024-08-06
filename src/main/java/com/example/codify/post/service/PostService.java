@@ -43,7 +43,7 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<PostDTO> getPostByIdAndMemberId(String postId, Long memberId) {
+    public Optional<PostDTO> getPostByPostIdAndMember_MemberId(String postId, Long memberId) {
         return postRepository.findByPostIdAndMember_MemberId(postId, memberId)
                 .map(postMapper::toDto); // Post를 PostDTO로 변환하여 반환
     }

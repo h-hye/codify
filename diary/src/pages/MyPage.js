@@ -28,6 +28,14 @@ const MyPage = () => {
         fetchProfile();
     }, []);
 
+    useEffect(() => {
+        // mypage 페이지 로드 시 MyPage 버튼에 active 클래스 추가
+        const mypageLink = document.querySelector('.main-nav-link[href="/mypage"]');
+        if (mypageLink) {
+            mypageLink.classList.add('active');
+        }
+    }, []);
+
     const handleLogout = () => {
         localStorage.removeItem('access'); // 토큰 삭제
         localStorage.removeItem('refresh');
@@ -42,11 +50,11 @@ const MyPage = () => {
                     <a href='/diary' className='main-nav-link'>
                         Create
                     </a>
+                    <a href='/main' className='main-nav-link'>
+                        Diary
+                    </a>
                     <a href='/statistics' className='main-nav-link'>
                         Statistics
-                    </a>
-                    <a href='/shop' className='main-nav-link'>
-                        Shop
                     </a>
                 </div>
                 <a href='/mypage' className='main-nav-link main-nav-link-mypage'>

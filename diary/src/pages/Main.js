@@ -18,6 +18,21 @@ const Main = () => {
         }
     }, [navigate]);
 
+    useEffect(() => {
+        // main 페이지 로드 시 Diary 버튼에 active 클래스 추가
+        const addActiveClass = () => {
+            const diaryLink = document.querySelector('.main-nav-link[href="/main"]');
+            if (diaryLink) {
+                diaryLink.classList.add('active');
+            } else {
+                console.error('Diary link not found');
+            }
+        };
+
+        // setTimeout을 사용하여 DOM이 완전히 렌더링된 후에 요소를 찾도록 함
+        setTimeout(addActiveClass, 0);
+    }, []);
+
     const handleDateClick = (value) => {
         navigate(`/diary-details/${value.toISOString().split('T')[0]}`);
     };
@@ -31,11 +46,11 @@ const Main = () => {
                         <a href='/diary' className='main-nav-link'>
                             Create
                         </a>
+                        <a href='/main' className='main-nav-link'>
+                            Diary
+                        </a>
                         <a href='/statistics' className='main-nav-link'>
                             Statistics
-                        </a>
-                        <a href='/shop' className='main-nav-link'>
-                            Shop
                         </a>
                     </div>
                     <a href='/mypage' className='main-nav-link main-nav-link-mypage'>

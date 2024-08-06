@@ -1,42 +1,95 @@
 .home-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-    text-align: center;
-  }
-  
-  .home-container header {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .home-container header h1 {
-    margin: 0;
-  }
-  
-  .home-container nav {
-    display: flex;
-    align-items: center;
-  }
-  
-  .home-container .login-button {
-    text-decoration: none;
-    color: #007bff;
-    font-weight: bold;
-  }
-  
-  .home-container .login-button:hover {
-    text-decoration: underline;
-  }
-  
-  .home-container main {
-    margin-top: 20px;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Start layout from the top */
+  background-color: #f0f0f0;
+  text-align: center;
+  position: relative; /* Allows positioning of children */
+}
+
+.home-container header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Fix the header to the top */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Ensure header is above other elements */
+}
+
+.home-container header h1 {
+  margin: 0;
+}
+
+.home-container nav {
+  display: flex;
+  align-items: center;
+}
+
+.home-container .login-button {
+  text-decoration: none;
+  color: #007bff;
+  font-weight: bold;
+  margin-right: 40px;
+}
+
+.home-container .login-button:first-of-type {
+  margin-left: 0;
+}
+
+.home-container .login-button:hover {
+  text-decoration: underline;
+}
+
+.home-container main {
+  margin-top: 80px; /* Space for fixed header */
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px; /* Optional: Limit maximum width */
+  position: relative; /* Position relative for layering */
+  z-index: 500; /* Ensure main content is above other elements */
+}
+
+.home-container main h1, 
+.home-container main h2, 
+.home-container main p {
+  margin: 10px 0; /* Add margin between text elements */
+}
+
+.home-container main button {
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  margin-bottom: 10px;
+}
+
+.home-container main button:hover {
+  background-color: #4b00b5;
+}
+
+.image-gallery {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+ /* Set a fixed height for the image gallery */
+  margin-top: 20px;
+  position: relative; /* Allow relative positioning of images */
+  z-index: 1; /* Ensure images are below the text */
+  margin-bottom: 30px;
+}
+
+.image-gallery img {
+  object-fit: cover; /* Maintain aspect ratio and cover container */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

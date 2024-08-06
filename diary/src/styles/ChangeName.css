@@ -1,0 +1,70 @@
+/* change-name-container 스타일 */
+.change-name-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.change-name-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.change-name-container input {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.change-name-container button {
+    flex: 1;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #6200ea; /* 변경 버튼 색상 */
+    color: white;
+    transition: opacity 0.3s;
+    margin: 5px; /* 버튼 사이의 간격 추가 */
+}
+
+.change-name-container button:hover {
+    opacity: 0.9;
+}
+
+.change-name-container .cancel-button {
+    background-color: #8a2be2; /* 취소 버튼 색상 */
+}
+
+.change-name-container .cancel-button:hover {
+    background-color: #7a1be1; /* 취소 버튼 호버 색상 */
+}
+
+.change-name-container p {
+    color: red;
+}
+
+/* 모달 오버레이 스타일 */
+.ReactModal__Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}

@@ -1,67 +1,79 @@
-import React, { useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import authInstance from '../apis/authInstance';
 import '../styles/Login.css';
 
 const Login = () => {
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [alertMessage, setAlertMessage] = useState(''); // 커스텀 알림 메시지 상태
 
-    // useCallback을 사용하여 handleGoogleLogin을 메모이제이션
-    const handleGoogleLogin = useCallback(
-        (response) => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            // 서버에 로그인 요청을 보내고, 토큰 발급
+            const response = await authInstance.post('/members/login', {
+                email: email,
+                password: password,
+            });
             console.log(response);
-            navigate('/diary');
-        },
-        [navigate]
-    );
-
-    useEffect(() => {
-        // Kakao SDK 초기화
-        if (window.Kakao && !window.Kakao.isInitialized()) {
-            window.Kakao.init(process.env.REACT_APP_KAKAO_JAVASCRIPT_KEY); // 환경 변수에서 키를 가져옵니다
+            const memberId = response.memberId;
+            localStorage.setItem('id', memberId);
+            navigate('/main'); // 로그인 성공 시 홈 화면으로 이동
+        } catch (error) {
+            console.error(error);
+            if (error.response) {
+                if (error.response.status === 400) {
+                    setAlertMessage(['잘못된 요청입니다. 입력한 내용을 확인해주세요.']);
+                } else if (error.response.status === 401) {
+                    setAlertMessage(['이메일 또는 비밀번호가 일치하지 않습니다.']);
+                } else {
+                    setAlertMessage(['로그인에 실패했습니다. 다시 시도해주세요.']);
+                }
+            } else if (error.request) {
+                setAlertMessage(['서버와의 통신에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.']);
+            } else {
+                setAlertMessage(['예기치 못한 오류가 발생했습니다. 다시 시도해주세요.']);
+            }
         }
-
-        // 구글 SDK 초기화
-        window.google.accounts.id.initialize({
-            client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID, // 환경 변수에서 클라이언트 ID를 가져옵니다
-            callback: handleGoogleLogin,
-        });
-    }, [handleGoogleLogin]);
-
-    const handleKakaoLogin = () => {
-        window.Kakao.Auth.login({
-            success: (authObj) => {
-                console.log(authObj);
-                navigate('/diary');
-            },
-            fail: (error) => {
-                console.error(error);
-            },
-        });
-    };
-
-    const handleGoogleLoginClick = () => {
-        window.google.accounts.id.prompt();
     };
 
     return (
-        <div className='login-container'>
-            <h2>감정일기</h2>
-            <form>
-                <input type='text' placeholder='이메일' />
-                <input type='password' placeholder='비밀번호' />
-                <button type='submit' className='login'>
-                    로그인
-                </button>
-            </form>
-            <button className='kakao' onClick={handleKakaoLogin}>
-                카카오 로그인
-            </button>
-            <button className='google' onClick={handleGoogleLoginClick}>
-                구글 로그인
-            </button>
-            <p>
-                계정이 없으신가요? <a href='/signup'>회원가입</a>
-            </p>
+        <div class='login-outer-container'>
+            <div className='login-container'>
+                <div className='login-header'>
+                    <button className='login-back-button' onClick={() => navigate('/')}>
+                        &lt;
+                    </button>
+                    <h2>감정일기</h2>
+                </div>
+                <form onSubmit={handleSubmit}>
+                    <input type='text' placeholder='이메일' value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input
+                        type='password'
+                        placeholder='비밀번호'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button type='submit' className='login'>
+                        로그인
+                    </button>
+                </form>
+                <p>
+                    계정이 없으신가요? <Link to='/signup'>회원가입</Link>
+                </p>
+                {alertMessage && (
+                    <div className='login-modal-background'>
+                        <div className='login-custom-alert'>
+                            {alertMessage.map((msg, index) => (
+                                <p key={index}>{msg}</p>
+                            ))}
+                            <button onClick={() => setAlertMessage('')}>닫기</button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

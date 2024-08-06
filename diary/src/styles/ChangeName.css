@@ -27,12 +27,6 @@
     box-sizing: border-box;
 }
 
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-
 .change-name-container button {
     flex: 1;
     padding: 10px 20px;

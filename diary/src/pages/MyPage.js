@@ -40,7 +40,7 @@ const MyPage = () => {
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('memberId'); // memberId를 로컬 스토리지에서 제거
+        localStorage.removeItem('memberId');
         navigate('/');
     };
 

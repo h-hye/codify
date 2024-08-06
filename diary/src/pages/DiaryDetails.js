@@ -13,14 +13,11 @@ const DiaryDetails = () => {
     useEffect(() => {
         const fetchDiary = async () => {
             try {
-                // const response = await axiosInstance.get('/api/posts/', {
-                //     params: { postId: id },
-                // });
-
+                // const response = await axiosInstance.get(`/api/posts/${id}`);
                 // setDiary(response.data);
                 // setTitle(response.data.title);
                 // setContent(response.data.content);
-                setDiary('안녕하세요');
+                setDiary('hello');
                 setTitle('안녕하세요');
                 setContent('내용입니다.');
             } catch (error) {
@@ -29,57 +26,43 @@ const DiaryDetails = () => {
         };
         fetchDiary();
     }, [id]);
-
+    //수정
     const handleUpdate = async () => {
         try {
-            await axiosInstance.put('/api/posts/', null, {
-                params: {
-                    postId: id,
-                    title: title,
-                    content: content,
-                },
+            await axiosInstance.put(`/api/posts/${id}`, {
+                title,
+                content,
             });
             alert('일기가 수정되었습니다.');
         } catch (error) {
             console.error('Error updating diary:', error);
         }
     };
-
+    //삭제
     const handleDelete = async () => {
         try {
-            await axiosInstance.delete('/api/posts/', {
-                params: { postId: id },
-            });
+            await axiosInstance.delete(`/api/posts/${id}`);
             alert('일기가 삭제되었습니다.');
-            navigate('/diary-list'); // 일기 목록 페이지로 이동
+            navigate('/main');
         } catch (error) {
             console.error('Error deleting diary:', error);
         }
     };
 
     if (!diary) {
-        return <p>Loading...</p>;
+        return <p>일기가 존재하지 않습니다.</p>;
     }
 
     return (
         <div className='diary-details-container'>
-            <button className='diary-details-back-button' onClick={() => navigate('/main')}>
+            <button className='back-button' onClick={() => navigate('/main')}>
                 뒤로가기
             </button>
-            <div className='diary-details-header'>
-                <h2>{id} 일기</h2>
-                <input
-                    type='text'
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder='제목을 입력하세요'
-                />
-            </div>
+            <h2>일기 상세</h2>
+            <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} />
             <textarea value={content} onChange={(e) => setContent(e.target.value)}></textarea>
-            <div className='diary-details-buttons'>
-                <button onClick={handleUpdate}>수정</button>
-                <button onClick={handleDelete}>삭제</button>
-            </div>
+            <button onClick={handleUpdate}>수정</button>
+            <button onClick={handleDelete}>삭제</button>
         </div>
     );
 };

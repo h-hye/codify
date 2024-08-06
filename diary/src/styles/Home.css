@@ -26,21 +26,50 @@
   align-items: center;
 }
 
-.home-container .nav-button {
+.home-container .login-button {
   text-decoration: none;
   color: #007bff;
   font-weight: bold;
   margin-left: 20px;
 }
 
-.home-container .nav-button:first-of-type {
+.home-container .login-button:first-of-type {
   margin-left: 0;
 }
 
-.home-container .nav-button:hover {
+.home-container .login-button:hover {
   text-decoration: underline;
 }
 
 .home-container main {
   margin-top: 20px;
+}
+
+.home-container main button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.home-container main button:hover {
+  background-color: #0056b3;
+}
+
+.image-gallery {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.image-gallery img {
+  width: 200px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }

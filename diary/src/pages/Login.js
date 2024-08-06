@@ -1,210 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import axiosInstance from '../apis/axiosInstance';
-import '../styles/Diary.css';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import authInstance from '../apis/authInstance';
+import '../styles/Login.css';
 
-const Diary = () => {
-    const [date, setDate] = useState(new Date());
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [image, setImage] = useState(null);
-    const [emotion, setEmotion] = useState('');
-    const [memberId, setMemberId] = useState('');
-    const [emoticonId, setEmoticonId] = useState(null);
-    const [emoticons, setEmoticons] = useState([]);
-    const [showCalendar, setShowCalendar] = useState(false);
+const Login = () => {
     const navigate = useNavigate();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [alertMessage, setAlertMessage] = useState(''); // 커스텀 알림 메시지 상태
 
-    useEffect(() => {
-        // 이모티콘 데이터를 가져오는 로직을 여기에 추가할 수 있습니다.
-        // const fetchEmoticons = async () => {
-        //     try {
-        //         const response = await axiosInstance.get('/api/emoticons');
-        //         setEmoticons(response.data);
-        //     } catch (error) {
-        //         console.error('Error fetching emoticons:', error);
-        //     }
-        // };
-        // fetchEmoticons();
-        const today = new Date();
-        setDate(today);
-    }, []);
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const formData = new FormData();
-            formData.append('postId', date.toISOString().split('T')[0].replace(/-/g, ''));
-            formData.append('title', title);
-            formData.append('content', content);
-            formData.append('memberId', memberId);
-            formData.append('emotion', emotion);
-            formData.append('emoticonId', emoticonId);
-            if (image) {
-                formData.append('image', image);
-            }
-
-            const response = await axiosInstance.post('/api/posts', formData, {
-                headers: {
-                    'X-User-Id': memberId,
-                    'Content-Type': 'multipart/form-data',
-                },
+            // 서버에 로그인 요청을 보내고, 토큰 발급
+            const response = await authInstance.post('/api/members/login', {
+                email: email,
+                password: password,
             });
-            console.log('Response:', response.data);
-            alert('일기가 저장되었습니다.');
-            navigate('/main');
+            console.log(response);
+            const memberId = response.memberId;
+            localStorage.setItem('id', memberId);
+            navigate('/main'); // 로그인 성공 시 홈 화면으로 이동
         } catch (error) {
-            console.error('Error saving diary:', error);
+            console.error(error);
             if (error.response) {
-                console.error('Response data:', error.response.data);
-                console.error('Response status:', error.response.status);
-                console.error('Response headers:', error.response.headers);
+                if (error.response.status === 400) {
+                    setAlertMessage(['잘못된 요청입니다. 입력한 내용을 확인해주세요.']);
+                } else if (error.response.status === 401) {
+                    setAlertMessage(['이메일 또는 비밀번호가 일치하지 않습니다.']);
+                } else {
+                    setAlertMessage(['로그인에 실패했습니다. 다시 시도해주세요.']);
+                }
             } else if (error.request) {
-                console.error('Request data:', error.request);
+                setAlertMessage(['서버와의 통신에 문제가 발생했습니다. 잠시 후 다시 시도해주세요.']);
             } else {
-                console.error('Error message:', error.message);
+                setAlertMessage(['예기치 못한 오류가 발생했습니다. 다시 시도해주세요.']);
             }
         }
     };
 
-    const handleImageChange = (e) => {
-        setImage(e.target.files[0]);
-    };
-
-    const handleEmotionChange = (e) => {
-        setEmotion(e.target.value);
-    };
-
-    const handleDateChange = (date) => {
-        setDate(date);
-    };
-
     return (
-        <div className='diary-container'>
-            <div className='main-nav'>
-                <span className='main-nav-brand' onClick={() => navigate('/main')}>
-                    Codify
-                </span>
-                <div className='main-nav-links'>
-                    <a href='/diary' className='main-nav-link active'>
-                        Create
-                    </a>
-                    <a href='/main' className='main-nav-link'>
-                        Diary
-                    </a>
-                    <a href='/statistics' className='main-nav-link'>
-                        Statistics
-                    </a>
+        <div class='login-outer-container'>
+            <div className='login-container'>
+                <div className='login-header'>
+                    <button className='login-back-button' onClick={() => navigate('/')}>
+                        &lt;
+                    </button>
+                    <h2>감정일기</h2>
                 </div>
-                <a href='/mypage' className='main-nav-link main-nav-link-mypage'>
-                    MyPage
-                </a>
-            </div>
-            <div className='diary-header'>
-                <h2 className='diary-date'>{date.toISOString().split('T')[0]}</h2>
-                <input
-                    type='text'
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder='일기 제목을 입력하세요...'
-                    className='diary-title-input'
-                />
-            </div>
-            {showCalendar && <DatePicker selected={date} onChange={handleDateChange} dateFormat='yyyy-MM-dd' inline />}
-            <form onSubmit={handleSubmit} className='diary-form'>
-                <input
-                    type='date'
-                    value={date.toISOString().split('T')[0]}
-                    onChange={(e) => handleDateChange(new Date(e.target.value))}
-                    className='diary-date-input'
-                />
-
-                {/* <input
-                    type='text'
-                    value={memberId}
-                    onChange={(e) => setMemberId(e.target.value)}
-                    placeholder='사용자 ID'
-                    className='diary-memberId-input'
-                /> */}
-                <div className='emotion-selector'>
-                    <label className='emotion-item'>
-                        <input
-                            type='radio'
-                            name='emotion'
-                            value='good'
-                            checked={emotion === 'good'}
-                            onChange={handleEmotionChange}
-                        />
-                        good
-                    </label>
-                    <label className='emotion-item'>
-                        <input
-                            type='radio'
-                            name='emotion'
-                            value='soso'
-                            checked={emotion === 'soso'}
-                            onChange={handleEmotionChange}
-                        />
-                        soso
-                    </label>
-                    <label className='emotion-item'>
-                        <input
-                            type='radio'
-                            name='emotion'
-                            value='bad'
-                            checked={emotion === 'bad'}
-                            onChange={handleEmotionChange}
-                        />
-                        bad
-                    </label>
-                    <label className='emotion-item'>
-                        <input
-                            type='radio'
-                            name='emotion'
-                            value='sad'
-                            checked={emotion === 'sad'}
-                            onChange={handleEmotionChange}
-                        />
-                        sad
-                    </label>
-                    <label className='emotion-item'>
-                        <input
-                            type='radio'
-                            name='emotion'
-                            value='angry'
-                            checked={emotion === 'angry'}
-                            onChange={handleEmotionChange}
-                        />
-                        angry
-                    </label>
-                </div>
-                <div className='diary-content-row'>
-                    {image && (
-                        <div className='diary-image-preview'>
-                            <img src={URL.createObjectURL(image)} alt='이미지' />
-                        </div>
-                    )}
-                    <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                        placeholder='오늘의 감정을 기록하세요...'
-                        className='diary-content-textarea'
+                <form onSubmit={handleSubmit}>
+                    <input type='text' placeholder='이메일' value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input
+                        type='password'
+                        placeholder='비밀번호'
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
                     />
-                </div>
-                <input type='file' accept='image/*' onChange={handleImageChange} className='diary-image-input' />
-                <div className='diary-button-row'>
-                    <button className='diary-back-button' onClick={() => navigate('/main')} type='button'>
-                        뒤로가기
+                    <button type='submit' className='login'>
+                        로그인
                     </button>
-                    <button type='submit' className='diary-submit-button'>
-                        저장하기
-                    </button>
-                </div>
-            </form>
+                </form>
+                <p>
+                    계정이 없으신가요? <Link to='/signup'>회원가입</Link>
+                </p>
+                {alertMessage && (
+                    <div className='login-modal-background'>
+                        <div className='login-custom-alert'>
+                            {alertMessage.map((msg, index) => (
+                                <p key={index}>{msg}</p>
+                            ))}
+                            <button onClick={() => setAlertMessage('')}>닫기</button>
+                        </div>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
 
-export default Diary;
+export default Login;

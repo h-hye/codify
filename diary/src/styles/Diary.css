@@ -1,114 +1,140 @@
-.diary-container {
-  font-family: 'Pretendard', sans-serif;
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-  background-color: #f8f9fa;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 60px; /* 고정된 높이 */
+  background-color: #f0f0f0;
+  padding: 10px 0;
 }
 
-h2 {
-  text-align: left;
-  margin-bottom: 10px;
+.main-nav-brand {
   font-size: 24px;
+  font-weight: bold;
+  margin-left: 20px;
+}
+
+.main-nav-links {
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  flex-grow: 1;
+}
+
+.main-nav-link {
+  color: #333;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 0 10px; /* 링크들 사이의 간격 */
+}
+
+.main-nav-link-mypage {
+  margin-right: 20px;
+}
+
+.main-nav-link:hover,
+.main-nav-link.active {
+  background-color: #6200ea;
+  color: white;
+  border-radius: 4px;
+}
+
+.diary-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+.diary-date {
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
 .diary-form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.title-input,
-.image-input,
-.submit-button {
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
+.diary-title-input, .diary-content-textarea, .diary-image-input, .diary-memberId-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.diary-content-textarea {
+    height: 200px;
+    resize: none;
+}
+
+.diary-emotion-selector {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.diary-emotion-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.diary-emotion-icon {
+    width: 40px;
+    height: 40px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+}
+
+.diary-emotion-icon.selected {
+    border-color: #6200ea;
 }
 
 .diary-content-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
+    display: flex;
+    gap: 20px;
 }
 
-.image-preview,
-.content-textarea {
-  width: 50%;
+.diary-image-preview img {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 8px;
 }
 
-.image-preview img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
+.diary-button-row {
+    display: flex;
+    justify-content: space-between;
 }
 
-.content-textarea {
-  height: 300px;
-  width: 100%;
-  resize: none;
+.diary-back-button, .diary-submit-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-.submit-button {
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.diary-back-button {
+    background-color: #ccc;
+    color: black;
 }
 
-.submit-button:hover {
-  background-color: #0056b3;
+.diary-submit-button {
+    background-color: #6200ea;
+    color: white;
 }
 
-.ai-response {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #E0F7FA;
-  border-radius: 5px;
-  color: #00796B;
-  min-height: 100px;
+.diary-back-button:hover {
+    background-color: #bbb;
 }
 
-.button-group {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.button-group button {
-  flex: 1;
-  padding: 10px;
-  font-size: 16px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.button-group button:hover {
-  background-color: #0056b3;
-}
-
-.back-button {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.back-button:hover {
-  background-color: #0056b3;
+.diary-submit-button:hover {
+    background-color: #4b00b5;
 }

@@ -13,10 +13,13 @@ const DiaryDetails = () => {
     useEffect(() => {
         const fetchDiary = async () => {
             try {
-                const response = await axiosInstance.get(`/api/posts/${id}`);
-                setDiary(response.data);
-                setTitle(response.data.title);
-                setContent(response.data.content);
+                // const response = await axiosInstance.get(`/api/posts/${id}`);
+                // setDiary(response.data);
+                // setTitle(response.data.title);
+                // setContent(response.data.content);
+                setDiary(['안녕하세요', '내용입니다']);
+                setTitle('안녕하세요');
+                setContent('내용입니다.');
             } catch (error) {
                 console.error('Error fetching diary:', error);
             }

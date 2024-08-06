@@ -9,8 +9,6 @@ import ChangeName from './pages/ChangeName';
 import Diary from './pages/Diary';
 import DiaryDetails from './pages/DiaryDetails';
 import Statistics from './pages/Statistics';
-import CreateTheme from './pages/CreateTheme';
-import ShopPage from './pages/ShopPage';
 
 const App = () => {
     const [themes, setThemes] = useState([]);
@@ -31,8 +29,6 @@ const App = () => {
                 <Route path='/diary' element={<Diary />} />
                 <Route path='/diary-details/:id' element={<DiaryDetails />} />
                 <Route path='/statistics' element={<Statistics />} />
-                <Route path='/create' element={<CreateTheme addTheme={addTheme} />} />
-                <Route path='/shop/*' element={<ShopPage themes={themes} />} />
             </Routes>
         </Router>
     );

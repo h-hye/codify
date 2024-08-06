@@ -34,7 +34,11 @@ const Main = () => {
     }, []);
 
     const handleDateClick = (value) => {
-        navigate(`/diary-details/${value.toISOString().split('T')[0]}`);
+        const year = value.getFullYear();
+        const month = `0${value.getMonth() + 1}`.slice(-2); // 월은 0부터 시작하므로 +1
+        const day = `0${value.getDate()}`.slice(-2);
+        const formattedDate = `${year}-${month}-${day}`;
+        navigate(`/diary-details/${formattedDate}`);
     };
 
     return (

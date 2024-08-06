@@ -26,7 +26,7 @@ const DiaryDetails = () => {
         };
         fetchDiary();
     }, [id]);
-    //수정
+
     const handleUpdate = async () => {
         try {
             await axiosInstance.put(`/api/posts/${id}`, {
@@ -38,7 +38,7 @@ const DiaryDetails = () => {
             console.error('Error updating diary:', error);
         }
     };
-    //삭제
+
     const handleDelete = async () => {
         try {
             await axiosInstance.delete(`/api/posts/${id}`);
@@ -55,14 +55,27 @@ const DiaryDetails = () => {
 
     return (
         <div className='diary-details-container'>
-            <button className='back-button' onClick={() => navigate('/main')}>
+            <button className='diary-details-back-button' onClick={() => navigate('/main')}>
                 뒤로가기
             </button>
-            <h2>일기 상세</h2>
-            <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} />
-            <textarea value={content} onChange={(e) => setContent(e.target.value)}></textarea>
-            <button onClick={handleUpdate}>수정</button>
-            <button onClick={handleDelete}>삭제</button>
+            <div className='diary-details-header'>
+                <h2>{id} 일기</h2>
+                <input
+                    type='text'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder='제목을 입력하세요'
+                />
+            </div>
+            <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder='내용을 입력하세요'
+            ></textarea>
+            <div className='diary-details-buttons'>
+                <button onClick={handleUpdate}>수정</button>
+                <button onClick={handleDelete}>삭제</button>
+            </div>
         </div>
     );
 };

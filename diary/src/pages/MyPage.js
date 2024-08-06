@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Modal from 'react-modal';
+import ChangeName from '../components/ChangeName';
 import '../styles/MyPage.css';
 
 const MyPage = () => {
     const [profile, setProfile] = useState({});
     const [days, setDays] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -37,9 +40,16 @@ const MyPage = () => {
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem('access'); // 토큰 삭제
-        localStorage.removeItem('refresh');
+        localStorage.removeItem('memberId');
         navigate('/');
+    };
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
@@ -61,25 +71,40 @@ const MyPage = () => {
                     MyPage
                 </a>
             </div>
-            <div className='mypage-content'>
-                <h2>My Page</h2>
-                <div className='mypage-profile-info'>
-                    <p>
-                        <strong>이름:</strong> {profile.name}
-                    </p>
-                    <p>
-                        <strong>이메일:</strong> {profile.email}
-                    </p>
-                    <p>
-                        <strong>가입일:</strong> {profile.joinDate}
-                    </p>
-                    <p>
-                        <strong>가입일수:</strong> {days}일
-                    </p>
+            <div className='mypage-content-wrapper'>
+                <div className='mypage-content'>
+                    <h2>My Page</h2>
+                    <div className='mypage-profile-info'>
+                        <p>
+                            <strong>이름:</strong> {profile.name}
+                        </p>
+                        <p>
+                            <strong>이메일:</strong> {profile.email}
+                        </p>
+                        <p>
+                            <strong>가입일:</strong> {profile.joinDate}
+                        </p>
+                        <p>
+                            <strong>가입일수:</strong> {days}일
+                        </p>
+                    </div>
+                    <button className='mypage-button' onClick={openModal}>
+                        이름 변경
+                    </button>
+                    <button className='mypage-button' onClick={handleLogout}>
+                        로그아웃
+                    </button>
                 </div>
-                <button onClick={() => navigate('/change-name')}>이름 변경</button>
-                <button onClick={handleLogout}>로그아웃</button>
             </div>
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel='Change Name Modal'
+                className='change-name-modal'
+                overlayClassName='change-name-overlay'
+            >
+                <ChangeName closeModal={closeModal} />
+            </Modal>
         </div>
     );
 };

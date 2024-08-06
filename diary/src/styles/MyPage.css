@@ -1,11 +1,4 @@
-.mypage-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100vh; /* 전체 화면 높이를 차지 */
-  background-color: #f0f0f0;
-}
-
+/* main-nav 스타일 */
 .main-nav {
   display: flex;
   align-items: center;
@@ -47,48 +40,80 @@
   border-radius: 4px;
 }
 
+/* mypage-container 스타일 */
+.mypage-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+/* mypage-content-wrapper 스타일 */
+.mypage-content-wrapper {
+  flex-grow: 1;
+  width:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+}
+
+/* mypage-content 스타일 */
 .mypage-content {
   background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  width: 350px;
-  margin: 10% 0; /* 위아래로 10%의 마진 */
-  text-align: center;
+  padding: 40px;
+  width:20%;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.mypage-content h2 {
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.mypage-profile-info {
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  padding: 20px; /* 패딩을 늘려서 위아래로 약간의 공간을 남김 */
-  width: 95%;
-  text-align: left;
-  margin-bottom: 20px;
+  text-align: center;
 }
 
 .mypage-profile-info p {
-  margin: 15px 0; /* 위아래로 더 많은 공간을 남김 */
-  font-size: 16px; /* 폰트 크기를 약간 키움 */
+  margin: 10px 0;
 }
 
-.mypage-content button {
+.mypage-button {
+  margin: 10px;
   padding: 10px 20px;
-  margin-top: 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   background-color: #6200ea;
   color: white;
+  transition: opacity 0.3s;
 }
 
-.mypage-content button:hover {
+.mypage-button:hover {
   opacity: 0.9;
+}
+
+/* 모달 스타일 */
+.change-name-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.change-name-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }

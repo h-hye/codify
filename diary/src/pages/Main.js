@@ -10,8 +10,8 @@ const Main = () => {
 
     useEffect(() => {
         // 로그인 상태 확인 (예: 토큰 존재 여부)
-        const token = localStorage.getItem('token'); // 예시: 로컬 스토리지에 저장된 토큰 확인
-        if (true) {
+        const id = localStorage.getItem('memberId'); // 예시: 로컬 스토리지에 저장된 토큰 확인
+        if (id) {
             setIsLoggedIn(true);
         } else {
             navigate('/'); // 로그인되지 않은 경우 홈 페이지로 이동

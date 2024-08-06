@@ -13,10 +13,13 @@ const DiaryDetails = () => {
     useEffect(() => {
         const fetchDiary = async () => {
             try {
-                // const response = await axiosInstance.get(`/api/posts/${id}`);
-                // setDiary(response.data);
-                // setTitle(response.data.title);
-                // setContent(response.data.content);
+                const response = await axiosInstance.get('/api/posts/', {
+                    postId: id,
+                });
+
+                setDiary(response.data);
+                setTitle(response.data.title);
+                setContent(response.data.content);
                 setDiary(['안녕하세요', '내용입니다']);
                 setTitle('안녕하세요');
                 setContent('내용입니다.');
@@ -29,9 +32,10 @@ const DiaryDetails = () => {
 
     const handleUpdate = async () => {
         try {
-            await axiosInstance.put(`/api/posts/${id}`, {
-                title,
-                content,
+            await axiosInstance.put(`/api/posts/`, {
+                postId: id,
+                title: title,
+                content: content,
             });
             alert('일기가 수정되었습니다.');
         } catch (error) {
@@ -41,7 +45,9 @@ const DiaryDetails = () => {
 
     const handleDelete = async () => {
         try {
-            await axiosInstance.delete(`/api/posts/${id}`);
+            await axiosInstance.delete(`/api/posts/`, {
+                postId: id,
+            });
             alert('일기가 삭제되었습니다.');
             navigate('/diary-list'); // 일기 목록 페이지로 이동
         } catch (error) {

@@ -37,18 +37,12 @@ const Diary = () => {
             formData.append('postId', date.toISOString().split('T')[0].replace(/-/g, ''));
             formData.append('title', title);
             formData.append('content', content);
-            formData.append('memberId', memberId);
             formData.append('emoticonId', emoticonId);
             if (image) {
                 formData.append('image', image);
             }
 
-            const response = await axiosInstance.post('/api/posts', formData, {
-                headers: {
-                    'X-User-Id': memberId,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            const response = await axiosInstance.post('/api/posts', formData);
             console.log('Response:', response.data);
             alert('일기가 저장되었습니다.');
             navigate('/main');

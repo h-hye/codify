@@ -18,9 +18,8 @@ const Login = () => {
                 password: password,
             });
             console.log(response);
-            const { accessToken, refreshToken } = response.token;
-            localStorage.setItem('access', accessToken);
-            localStorage.setItem('refresh', refreshToken);
+            const memberId = response.memberId;
+            localStorage.setItem('id', memberId);
             navigate('/main'); // 로그인 성공 시 홈 화면으로 이동
         } catch (error) {
             console.error(error);

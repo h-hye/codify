@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axiosInstance from '../apis/axiosInstance';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import '../styles/Main.css';
@@ -8,91 +7,61 @@ import '../styles/Main.css';
 const Main = () => {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [diaryEntries, setDiaryEntries] = useState({});
-    const [selectedDate, setSelectedDate] = useState(new Date());
 
     useEffect(() => {
-        const token = localStorage.getItem('token'); //
-        if (token) {
+        // 로그인 상태 확인 (예: 토큰 존재 여부)
+        const id = localStorage.getItem('memberId'); // 예시: 로컬 스토리지에 저장된 토큰 확인
+        if (id) {
             setIsLoggedIn(true);
         } else {
-            navigate('/');
+            navigate('/'); // 로그인되지 않은 경우 홈 페이지로 이동
         }
     }, [navigate]);
 
     useEffect(() => {
-        const fetchDiaryEntries = async () => {
-            try {
-                const memberId = localStorage.getItem('memberId');
-                const postIdPrefix = selectedDate.toISOString().slice(0, 7).replace('-', '');
-                const response = await axiosInstance.post(
-                    '/api/posts/month',
-                    { postIdPrefix },
-                    {
-                        headers: { 'X-User-Id': memberId },
-                    }
-                );
-                const entries = response.data.reduce((acc, entry) => {
-                    const date = entry.postId.slice(0, 8);
-                    acc[date] = entry;
-                    return acc;
-                }, {});
-                setDiaryEntries(entries);
-            } catch (error) {
-                console.error('Error fetching diary entries:', error);
+        // main 페이지 로드 시 Diary 버튼에 active 클래스 추가
+        const addActiveClass = () => {
+            const diaryLink = document.querySelector('.main-nav-link[href="/main"]');
+            if (diaryLink) {
+                diaryLink.classList.add('active');
+            } else {
+                console.error('Diary link not found');
             }
         };
 
-        fetchDiaryEntries();
-    }, [selectedDate]);
+        // setTimeout을 사용하여 DOM이 완전히 렌더링된 후에 요소를 찾도록 함
+        setTimeout(addActiveClass, 0);
+    }, []);
 
     const handleDateClick = (value) => {
-        const dateString = value.toLocaleDateString('en-CA').replace(/-/g, '');
-        navigate(`/diary-details/${dateString}`);
-    };
-
-    const tileContent = ({ date, view }) => {
-        if (view === 'month') {
-            const dateString = date.toISOString().split('T')[0].replace(/-/g, '');
-            if (diaryEntries[dateString]) {
-                const { title, emoticonUrl } = diaryEntries[dateString];
-                return (
-                    <div className='diary-entry-title'>
-                        {title}
-                        {emoticonUrl && <img src={emoticonUrl} alt='emoticon' className='emotion-icon-small' />}
-                    </div>
-                );
-            }
-        }
-        return null;
+        navigate(`/diary-details/${value.toISOString().split('T')[0]}`);
     };
 
     return (
         isLoggedIn && (
             <div className='main-container'>
-                <div className='nav-links'>
-                    <a href='/main' className='nav-link'>
-                        Diary
-                    </a>
-                    <a href='/statistics' className='nav-link'>
-                        Statistics
-                    </a>
-                    <a href='/shop' className='nav-link'>
-                        Shop
-                    </a>
-                    <a href='/diary' className='nav-link'>
-                        Create
-                    </a>
-                    <a href='/mypage' className='nav-link'>
+                <div className='main-nav'>
+                    <span className='main-nav-brand'>Codify</span>
+                    <div className='main-nav-links'>
+                        <a href='/diary' className='main-nav-link'>
+                            Create
+                        </a>
+                        <a href='/main' className='main-nav-link'>
+                            Diary
+                        </a>
+                        <a href='/statistics' className='main-nav-link'>
+                            Statistics
+                        </a>
+                    </div>
+                    <a href='/mypage' className='main-nav-link main-nav-link-mypage'>
                         MyPage
                     </a>
                 </div>
-                <Calendar
-                    onClickDay={handleDateClick}
-                    className='react-calendar'
-                    tileContent={tileContent}
-                    onActiveStartDateChange={({ activeStartDate }) => setSelectedDate(activeStartDate)}
-                />
+                <div className='calendar-container-wrapper'>
+                    <div className='calendar-container'>
+                        <Calendar onClickDay={handleDateClick} className='react-calendar' />
+                    </div>
+                </div>
             </div>
         )
     );

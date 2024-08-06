@@ -13,7 +13,7 @@ const DiaryDetails = () => {
     useEffect(() => {
         const fetchDiary = async () => {
             try {
-                const response = await axiosInstance.post(`/api/posts/${id}`);
+                const response = await axiosInstance.get(`/api/posts/${id}`);
                 setDiary(response.data);
                 setTitle(response.data.title);
                 setContent(response.data.content);

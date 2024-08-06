@@ -45,22 +45,44 @@
     align-items: center;
     background-color: #f0f0f0;
     padding: 20px;
+    height: 100%;
+}
+.diary-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 800px;
+    flex-wrap:nowrap;
 }
 
 .diary-date {
+    flex:0 0 auto;
     font-size: 24px;
-    margin-bottom: 20px;
 }
-
+.diary-title-input {
+    margin-top:30px;
+    margin-bottom: 30px;
+    flex: 1 1 auto;
+    width: 60%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
 .diary-form {
-    margin-top:20px;
+    margin-top:0;
     width: 100%;
     max-width: 800px;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-
+.diary-date-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 .diary-title-input, .diary-content-textarea, .diary-image-input, .diary-memberId-input {
     width: 100%;
     padding: 10px;

@@ -102,10 +102,16 @@ const Diary = () => {
                     MyPage
                 </a>
             </div>
-            <h2 className='diary-date'>{date.toISOString().split('T')[0]}</h2>
-            <button className='calendar-toggle-button' onClick={() => setShowCalendar(!showCalendar)}>
-                {showCalendar ? '달력 닫기' : '달력 열기'}
-            </button>
+            <div className='diary-header'>
+                <h2 className='diary-date'>{date.toISOString().split('T')[0]}</h2>
+                <input
+                    type='text'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder='일기 제목을 입력하세요...'
+                    className='diary-title-input'
+                />
+            </div>
             {showCalendar && <DatePicker selected={date} onChange={handleDateChange} dateFormat='yyyy-MM-dd' inline />}
             <form onSubmit={handleSubmit} className='diary-form'>
                 <input
@@ -114,20 +120,14 @@ const Diary = () => {
                     onChange={(e) => handleDateChange(new Date(e.target.value))}
                     className='diary-date-input'
                 />
-                <input
-                    type='text'
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder='일기 제목을 입력하세요...'
-                    className='diary-title-input'
-                />
-                <input
+
+                {/* <input
                     type='text'
                     value={memberId}
                     onChange={(e) => setMemberId(e.target.value)}
                     placeholder='사용자 ID'
                     className='diary-memberId-input'
-                />
+                /> */}
                 <div className='emotion-selector'>
                     <label className='emotion-item'>
                         <input

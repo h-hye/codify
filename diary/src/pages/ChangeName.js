@@ -11,7 +11,8 @@ const ChangeName = () => {
 
     const handleChangeName = async () => {
         try {
-            await axiosInstance.patch('/api/members/change-name', {
+            const memberId = localStorage.getItem('memberId');
+            await axiosInstance.patch(`/members/change-name/${memberId}`, {
                 oldName,
                 newName,
             });

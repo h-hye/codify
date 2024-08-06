@@ -9,17 +9,18 @@ const DiaryDetails = () => {
     const [diary, setDiary] = useState(null);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const [aiResponse, setAiResponse] = useState('');
 
     useEffect(() => {
         const fetchDiary = async () => {
             try {
-                // const response = await axiosInstance.get(`/api/posts/${id}`);
-                // setDiary(response.data);
-                // setTitle(response.data.title);
-                // setContent(response.data.content);
-                setDiary('hello');
-                setTitle('안녕하세요');
-                setContent('내용입니다.');
+                const response = await axiosInstance.get('/posts/get', {
+                    params: { postId: id },
+                });
+                setDiary(response);
+                setTitle(response.title);
+                setContent(response.content);
+                setAiResponse(response.aiResponse);
             } catch (error) {
                 console.error('Error fetching diary:', error);
             }
@@ -29,10 +30,13 @@ const DiaryDetails = () => {
 
     const handleUpdate = async () => {
         try {
-            await axiosInstance.put(`/api/posts/${id}`, {
-                title,
-                content,
+            await axiosInstance.put('/posts/update', {
+                postId: id,
+                title: title,
+                content: content,
+                aiResponse: aiResponse,
             });
+            setDiary();
             alert('일기가 수정되었습니다.');
         } catch (error) {
             console.error('Error updating diary:', error);
@@ -41,7 +45,14 @@ const DiaryDetails = () => {
 
     const handleDelete = async () => {
         try {
-            await axiosInstance.delete(`/api/posts/${id}`);
+            await axiosInstance.delete('/posts/delete', {
+                data: {
+                    postId: id,
+                    title: title,
+                    content: content,
+                    aiResponse: aiResponse,
+                },
+            });
             alert('일기가 삭제되었습니다.');
             navigate('/main');
         } catch (error) {

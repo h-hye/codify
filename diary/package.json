@@ -1,5 +1,5 @@
 {
-  "name": "emotion-diary",
+  "name": "hackathon_practice",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,8 +7,16 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.2",
+    "chart.js": "^4.4.3",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "date-fns": "^3.6.0",
     "react": "^18.3.1",
+    "react-calendar": "^5.0.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-datepicker": "^7.3.0",
     "react-dom": "^18.3.1",
+    "react-modal": "^3.16.1",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.25.1",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"

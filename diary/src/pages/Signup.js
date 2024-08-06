@@ -96,7 +96,7 @@ const Signup = () => {
 
         if (isValid) {
             try {
-                await authInstance.post('/api/members/join', {
+                await authInstance.post('/members/join', {
                     name: nickname,
                     email: email,
                     password: password,

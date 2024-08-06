@@ -13,7 +13,7 @@ const Login = () => {
         e.preventDefault();
         try {
             // 서버에 로그인 요청을 보내고, 토큰 발급
-            const response = await authInstance.post('/api/members/login', {
+            const response = await authInstance.post('/members/login', {
                 email: email,
                 password: password,
             });

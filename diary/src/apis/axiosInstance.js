@@ -1,7 +1,4 @@
-// 로그인 , signUp을 제외한 모든 axios 요청은 axiosInstance로 처리
-
 import axios from 'axios';
-import getNewRefreshToken from './refresh';
 
 const BASE_URL = 'http://localhost:8080';
 
@@ -11,13 +8,16 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        // 최초 access는 받아와도 null일 것이므로 if (access)를 거쳐감
-        const access = localStorage.getItem('access'); // 로컬 스토리지에서 토큰 가져오기
-        if (access) {
-            config.headers.Authorization = `Bearer ${access}`; // 동적으로 헤더 추가 ( access token 존재 시 header에 토큰 추가)
-        }
         console.log('Request config:', config);
-        return config; // 수정된 config 객체 (최초 요청 + ) 반환
+        const memberId = localStorage.getItem('memberId'); // 대소문자 수정
+        if (memberId) {
+            // params가 이미 있을 경우 기존 params에 memberId 추가
+            config.params = {
+                ...config.params,
+                memberId: memberId,
+            };
+        }
+        return config; // 수정된 config 객체 반환
     },
     (error) => {
         console.error('Request error:', error);
@@ -31,8 +31,6 @@ axiosInstance.interceptors.response.use(
         return response.data;
     },
     async (error) => {
-        const originalRequest = error.config;
-
         if (error.response) {
             const { status } = error.response;
             console.error(`Response error (${status}):`, error.response.data);
@@ -43,18 +41,6 @@ axiosInstance.interceptors.response.use(
                 case 401:
                     // 토큰이 만료된 경우임
                     console.error('401: 인증이 필요합니다. 로그인 해주세요.');
-                    try {
-                        await getNewRefreshToken(); // refresh.js에 있는 함수
-                        const newAccessToken = localStorage.getItem('access');
-                        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-                        return axiosInstance(originalRequest);
-                    } catch (refreshError) {
-                        console.error('토큰 갱신 오류:', refreshError);
-                        // 갱신 실패 시 로그인 페이지로 리디렉션
-                        localStorage.removeItem('access');
-                        localStorage.removeItem('refresh');
-                        window.location.href = '/login';
-                    }
                     break;
                 case 403:
                     console.error('403: 권한이 없습니다.');

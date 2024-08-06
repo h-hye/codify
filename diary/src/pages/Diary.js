@@ -11,26 +11,8 @@ const Diary = () => {
     const [content, setContent] = useState('');
     const [image, setImage] = useState(null);
     const [emotion, setEmotion] = useState('');
-    const [memberId, setMemberId] = useState('');
-    const [emoticonId, setEmoticonId] = useState(null);
-    const [emoticons, setEmoticons] = useState([]);
     const [showCalendar, setShowCalendar] = useState(false);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        // 이모티콘 데이터를 가져오는 로직을 여기에 추가할 수 있습니다.
-        // const fetchEmoticons = async () => {
-        //     try {
-        //         const response = await axiosInstance.get('/api/emoticons');
-        //         setEmoticons(response.data);
-        //     } catch (error) {
-        //         console.error('Error fetching emoticons:', error);
-        //     }
-        // };
-        // fetchEmoticons();
-        const today = new Date();
-        setDate(today);
-    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -39,19 +21,8 @@ const Diary = () => {
             formData.append('postId', date.toISOString().split('T')[0].replace(/-/g, ''));
             formData.append('title', title);
             formData.append('content', content);
-            formData.append('memberId', memberId);
-            formData.append('emotion', emotion);
-            formData.append('emoticonId', emoticonId);
-            if (image) {
-                formData.append('image', image);
-            }
 
-            const response = await axiosInstance.post('/api/posts', formData, {
-                headers: {
-                    'X-User-Id': memberId,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            const response = await axiosInstance.post('/posts/create', formData);
             console.log('Response:', response.data);
             alert('일기가 저장되었습니다.');
             navigate('/main');

@@ -36,6 +36,7 @@
     background-color: #6200ea; /* 변경 버튼 색상 */
     color: white;
     transition: opacity 0.3s;
+    margin: 5px; /* 버튼 사이의 간격 추가 */
 }
 
 .change-name-container button:hover {

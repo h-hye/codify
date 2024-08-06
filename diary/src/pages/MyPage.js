@@ -15,7 +15,7 @@ const MyPage = () => {
         const fetchProfile = async () => {
             try {
                 const response = await axios.get('/api/profile');
-                setProfile(response.data);
+                setProfile(response);
                 if (response.data.joinDate) {
                     const joinDate = new Date(response.data.joinDate);
                     const currentDate = new Date();

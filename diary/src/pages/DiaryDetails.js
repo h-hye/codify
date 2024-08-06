@@ -13,14 +13,14 @@ const DiaryDetails = () => {
     useEffect(() => {
         const fetchDiary = async () => {
             try {
-                const response = await axiosInstance.get('/api/posts/', {
-                    postId: id,
-                });
+                // const response = await axiosInstance.get('/api/posts/', {
+                //     params: { postId: id },
+                // });
 
-                setDiary(response.data);
-                setTitle(response.data.title);
-                setContent(response.data.content);
-                setDiary(['안녕하세요', '내용입니다']);
+                // setDiary(response.data);
+                // setTitle(response.data.title);
+                // setContent(response.data.content);
+                setDiary('안녕하세요');
                 setTitle('안녕하세요');
                 setContent('내용입니다.');
             } catch (error) {
@@ -32,10 +32,12 @@ const DiaryDetails = () => {
 
     const handleUpdate = async () => {
         try {
-            await axiosInstance.put(`/api/posts/`, {
-                postId: id,
-                title: title,
-                content: content,
+            await axiosInstance.put('/api/posts/', null, {
+                params: {
+                    postId: id,
+                    title: title,
+                    content: content,
+                },
             });
             alert('일기가 수정되었습니다.');
         } catch (error) {
@@ -45,8 +47,8 @@ const DiaryDetails = () => {
 
     const handleDelete = async () => {
         try {
-            await axiosInstance.delete(`/api/posts/`, {
-                postId: id,
+            await axiosInstance.delete('/api/posts/', {
+                params: { postId: id },
             });
             alert('일기가 삭제되었습니다.');
             navigate('/diary-list'); // 일기 목록 페이지로 이동
@@ -61,14 +63,23 @@ const DiaryDetails = () => {
 
     return (
         <div className='diary-details-container'>
-            <button className='back-button' onClick={() => navigate('/diary-list')}>
+            <button className='diary-details-back-button' onClick={() => navigate('/main')}>
                 뒤로가기
             </button>
-            <h2>일기 상세</h2>
-            <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} />
+            <div className='diary-details-header'>
+                <h2>{id} 일기</h2>
+                <input
+                    type='text'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder='제목을 입력하세요'
+                />
+            </div>
             <textarea value={content} onChange={(e) => setContent(e.target.value)}></textarea>
-            <button onClick={handleUpdate}>수정</button>
-            <button onClick={handleDelete}>삭제</button>
+            <div className='diary-details-buttons'>
+                <button onClick={handleUpdate}>수정</button>
+                <button onClick={handleDelete}>삭제</button>
+            </div>
         </div>
     );
 };

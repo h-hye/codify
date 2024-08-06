@@ -28,6 +28,8 @@ const Diary = () => {
         //     }
         // };
         // fetchEmoticons();
+        const today = new Date();
+        setDate(today);
     }, []);
 
     const handleSubmit = async (event) => {
@@ -37,12 +39,19 @@ const Diary = () => {
             formData.append('postId', date.toISOString().split('T')[0].replace(/-/g, ''));
             formData.append('title', title);
             formData.append('content', content);
+            formData.append('memberId', memberId);
+            formData.append('emotion', emotion);
             formData.append('emoticonId', emoticonId);
             if (image) {
                 formData.append('image', image);
             }
 
-            const response = await axiosInstance.post('/api/posts', formData);
+            const response = await axiosInstance.post('/api/posts', formData, {
+                headers: {
+                    'X-User-Id': memberId,
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             console.log('Response:', response.data);
             alert('일기가 저장되었습니다.');
             navigate('/main');
@@ -64,9 +73,8 @@ const Diary = () => {
         setImage(e.target.files[0]);
     };
 
-    const handleEmotionClick = (emotionType, id) => {
-        setEmotion(emotionType);
-        setEmoticonId(id);
+    const handleEmotionChange = (e) => {
+        setEmotion(e.target.value);
     };
 
     const handleDateChange = (date) => {
@@ -94,8 +102,16 @@ const Diary = () => {
                     MyPage
                 </a>
             </div>
-            <h2 className='diary-date'>{date.toISOString().split('T')[0]}</h2>
-            <button onClick={() => setShowCalendar(!showCalendar)}>{showCalendar ? '달력 닫기' : '달력 열기'}</button>
+            <div className='diary-header'>
+                <h2 className='diary-date'>{date.toISOString().split('T')[0]}</h2>
+                <input
+                    type='text'
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder='일기 제목을 입력하세요...'
+                    className='diary-title-input'
+                />
+            </div>
             {showCalendar && <DatePicker selected={date} onChange={handleDateChange} dateFormat='yyyy-MM-dd' inline />}
             <form onSubmit={handleSubmit} className='diary-form'>
                 <input
@@ -104,35 +120,65 @@ const Diary = () => {
                     onChange={(e) => handleDateChange(new Date(e.target.value))}
                     className='diary-date-input'
                 />
-                <input
-                    type='text'
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder='일기 제목을 입력하세요...'
-                    className='diary-title-input'
-                />
-                <input
+
+                {/* <input
                     type='text'
                     value={memberId}
                     onChange={(e) => setMemberId(e.target.value)}
                     placeholder='사용자 ID'
                     className='diary-memberId-input'
-                />
-                <div className='diary-emotion-selector'>
-                    {emoticons.map((emoticon) => (
-                        <div
-                            key={emoticon.id}
-                            className='diary-emotion-item'
-                            onClick={() => handleEmotionClick(emoticon.name, emoticon.id)}
-                        >
-                            <img
-                                src={emoticon.url}
-                                alt={emoticon.name}
-                                className={`diary-emotion-icon ${emotion === emoticon.name ? 'selected' : ''}`}
-                            />
-                            <span>{emoticon.name}</span>
-                        </div>
-                    ))}
+                /> */}
+                <div className='emotion-selector'>
+                    <label className='emotion-item'>
+                        <input
+                            type='radio'
+                            name='emotion'
+                            value='good'
+                            checked={emotion === 'good'}
+                            onChange={handleEmotionChange}
+                        />
+                        good
+                    </label>
+                    <label className='emotion-item'>
+                        <input
+                            type='radio'
+                            name='emotion'
+                            value='soso'
+                            checked={emotion === 'soso'}
+                            onChange={handleEmotionChange}
+                        />
+                        soso
+                    </label>
+                    <label className='emotion-item'>
+                        <input
+                            type='radio'
+                            name='emotion'
+                            value='bad'
+                            checked={emotion === 'bad'}
+                            onChange={handleEmotionChange}
+                        />
+                        bad
+                    </label>
+                    <label className='emotion-item'>
+                        <input
+                            type='radio'
+                            name='emotion'
+                            value='sad'
+                            checked={emotion === 'sad'}
+                            onChange={handleEmotionChange}
+                        />
+                        sad
+                    </label>
+                    <label className='emotion-item'>
+                        <input
+                            type='radio'
+                            name='emotion'
+                            value='angry'
+                            checked={emotion === 'angry'}
+                            onChange={handleEmotionChange}
+                        />
+                        angry
+                    </label>
                 </div>
                 <div className='diary-content-row'>
                     {image && (
